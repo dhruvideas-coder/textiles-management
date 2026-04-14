@@ -21,11 +21,11 @@
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Serve static assets from public/ folder (css, js, images, etc.)
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond public/%{REQUEST_FILENAME} -f
-    RewriteRule ^(.*)$ public/$1 [L]
+    # Serve static assets (build, storage, etc.) from public/ folder
+    RewriteRule ^build/(.*)$ public/build/$1 [L]
+    RewriteRule ^storage/(.*)$ public/storage/$1 [L]
+    RewriteRule ^favicon\.ico$ public/favicon.ico [L]
+    RewriteRule ^robots\.txt$ public/robots.txt [L]
 
     # Route all requests through public/index.php (hides /public from URL)
     RewriteCond %{REQUEST_URI} !^/public/
