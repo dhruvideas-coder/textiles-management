@@ -4,7 +4,9 @@
 @section('actions')
     <div class="flex items-center gap-2">
         <a href="{{ route('owner.challans.pdf', $challan) }}" class="btn-primary text-xs">PDF</a>
-        <a href="{{ route('owner.challans.edit', $challan) }}" class="btn-secondary text-xs">Edit</a>
+        <form method="POST" action="{{ route('owner.challans.duplicate', $challan) }}" class="inline">@csrf
+            <button type="submit" class="btn-secondary text-xs">Duplicate</button>
+        </form>
     </div>
 @endsection
 

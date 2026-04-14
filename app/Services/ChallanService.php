@@ -55,4 +55,25 @@ class ChallanService
             return $challan->load(['items.inventory', 'customer', 'shop', 'user']);
         });
     }
+
+    public function duplicateChallan(Challan $challan, User $user): Challan
+    {
+        return $this->createChallan($user, [
+            'challan_number' => null,
+            'challan_date' => now()->toDateString(),
+            'customer_id' => $challan->customer_id,
+            'party_name' => $challan->party_name,
+            'broker_name' => $challan->broker_name,
+            'remarks' => $challan->remarks,
+            'status' => 'draft',
+            'items' => $challan->items->map(fn ($item) => [
+                'inventory_id' => $item->inventory_id,
+                'product_name' => $item->product_name,
+                'pieces' => $item->pieces,
+                'meters' => $item->meters,
+                'weight' => $item->weight,
+                'remarks' => $item->remarks,
+            ])->all(),
+        ]);
+    }
 }

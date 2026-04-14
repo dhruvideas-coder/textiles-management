@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function (): void {
             Route::get('bills/{bill}/thermal', [BillController::class, 'printThermal'])->name('bills.thermal');
 
             Route::resource('challans', ChallanController::class);
+            Route::post('challans/{challan}/duplicate', [ChallanController::class, 'duplicate'])->name('challans.duplicate');
             Route::get('challans/{challan}/pdf', [ChallanController::class, 'downloadPdf'])->name('challans.pdf');
 
             Route::resource('customers', CustomerController::class);

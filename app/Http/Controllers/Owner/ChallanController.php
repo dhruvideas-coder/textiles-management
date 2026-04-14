@@ -94,6 +94,13 @@ class ChallanController extends Controller
         return redirect()->route('owner.challans.index')->with('status', 'Challan deleted.');
     }
 
+    public function duplicate(Challan $challan): RedirectResponse
+    {
+        $newChallan = $this->challanService->duplicateChallan($challan->load('items'), auth()->user());
+
+        return redirect()->route('owner.challans.show', $newChallan)->with('status', 'Challan duplicated as draft.');
+    }
+
     public function downloadPdf(Challan $challan)
     {
         $pdf = Pdf::loadView('owner.challans.pdf', [

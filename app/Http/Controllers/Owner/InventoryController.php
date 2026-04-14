@@ -53,12 +53,12 @@ class InventoryController extends Controller
 
     public function show(Inventory $inventory): View
     {
-        return view('owner.inventory.show', ['item' => $inventory]);
+        return view('owner.inventory.show', ['inventory' => $inventory]);
     }
 
     public function edit(Inventory $inventory): View
     {
-        return view('owner.inventory.edit', ['item' => $inventory]);
+        return view('owner.inventory.edit', ['inventory' => $inventory]);
     }
 
     public function update(Request $request, Inventory $inventory): RedirectResponse

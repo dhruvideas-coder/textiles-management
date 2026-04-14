@@ -115,7 +115,7 @@ class BillController extends Controller
     {
         $newBill = $this->billService->duplicateBill($bill->load('items'), auth()->user());
 
-        return redirect()->route('owner.bills.edit', $newBill)->with('status', 'Bill duplicated in draft mode.');
+        return redirect()->route('owner.bills.show', $newBill)->with('status', 'Bill duplicated as draft.');
     }
 
     public function downloadPdf(Bill $bill)
