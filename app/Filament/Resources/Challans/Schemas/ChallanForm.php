@@ -102,6 +102,7 @@ class ChallanForm
 
         return $schema->components([
             Section::make('Challan Details')
+                ->columnSpanFull()
                 ->columns([
                     'default' => 1,
                     'sm' => 2,
@@ -110,8 +111,10 @@ class ChallanForm
                 ->schema($detailFields),
 
             Section::make('Measurement Grid (6×12)')
+                ->columnSpanFull()
                 ->schema([
                     ViewField::make('grid_ui')
+                        ->columnSpanFull()
                         ->view('filament.forms.challan-grid-wrapper'),
                 ]),
         ]);
