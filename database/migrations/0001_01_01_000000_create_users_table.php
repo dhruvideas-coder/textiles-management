@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('provider')->nullable();
             $table->string('provider_id')->nullable();
             $table->enum('role', ['admin', 'owner', 'staff'])->default('staff');
-            $table->foreignId('owner_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('owner_id')->nullable()->index();
+            $table->foreign('owner_id', 'users_owner_id_foreign')->references('id')->on('users')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });

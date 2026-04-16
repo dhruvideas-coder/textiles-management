@@ -10,13 +10,14 @@ return new class extends Migration
     {
         Schema::create('challan_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('challan_id')->constrained('challans')->onDelete('cascade')->index();
+            $table->foreignId('challan_id')->index();
             $table->integer('column_no');
             $table->integer('row_no');
             $table->decimal('meters', 10, 2)->default(0);
             $table->timestamps();
-            
-            $table->unique(['challan_id', 'column_no', 'row_no']);
+
+            $table->unique(['challan_id', 'column_no', 'row_no'], 'challan_items_position_unique');
+            $table->foreign('challan_id', 'challan_items_challan_id_foreign')->references('id')->on('challans')->onDelete('cascade');
         });
     }
 

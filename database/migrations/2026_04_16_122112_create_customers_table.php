@@ -10,7 +10,8 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('owner_id')->nullable()->constrained('users')->onDelete('cascade')->index();
+            $table->foreignId('owner_id')->nullable()->index();
+            $table->foreign('owner_id', 'customers_owner_id_foreign')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
             $table->text('address')->nullable();
             $table->string('GSTIN')->nullable();
