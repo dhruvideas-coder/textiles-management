@@ -29,8 +29,8 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('admin')
-            ->login()
+            ->path('')
+            ->login(\App\Filament\Pages\Auth\Login::class)
             ->brandName('Gurudev Textiles ERP')
             ->colors([
                 'primary' => Color::Blue,

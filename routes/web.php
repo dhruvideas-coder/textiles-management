@@ -5,7 +5,7 @@ use App\Http\Controllers\PdfController;
 use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
-    return redirect('admin');
+    return redirect('login');
 });
 
 Route::get('/login/google', [AuthController::class, 'redirectToGoogle'])->name('login.google');
