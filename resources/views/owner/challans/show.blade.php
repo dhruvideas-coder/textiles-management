@@ -19,8 +19,9 @@
                 <p class="mt-1 text-sm text-slate-500">{{ $challan->challan_date?->format('d M Y') }}</p>
                 <div class="mt-4 text-sm text-slate-700">
                     <p><strong>Party:</strong> {{ $challan->party_name }}</p>
+                    <p><strong>Order No:</strong> {{ $challan->order_number ?? '—' }}</p>
                     <p><strong>Broker:</strong> {{ $challan->broker_name ?? '—' }}</p>
-                    @if($challan->customer) <p><strong>Customer:</strong> {{ $challan->customer->name }}</p> @endif
+                    @if($challan->customer) <p><strong>Linked Customer:</strong> {{ $challan->customer->name }}</p> @endif
                     @if($challan->remarks) <p><strong>Remarks:</strong> {{ $challan->remarks }}</p> @endif
                 </div>
             </div>

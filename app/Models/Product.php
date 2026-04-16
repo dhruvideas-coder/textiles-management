@@ -19,6 +19,7 @@ class Product extends Model
         'shop_id',
         'sku',
         'design_number',
+        'hsn_code',
         'name',
         'description',
         'current_stock_meters',

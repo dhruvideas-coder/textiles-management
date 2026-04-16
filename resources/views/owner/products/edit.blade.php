@@ -21,6 +21,10 @@
                 <input type="text" name="design_number" value="{{ old('design_number', $product->design_number) }}" class="form-input">
             </div>
             <div>
+                <label class="form-label">HSN Code</label>
+                <input type="text" name="hsn_code" value="{{ old('hsn_code', $product->hsn_code) }}" class="form-input">
+            </div>
+            <div>
                 <label class="form-label">Selling Rate (₹) <span class="text-red-500">*</span></label>
                 <input type="number" name="rate" value="{{ old('rate', $product->rate) }}" class="form-input" step="0.01" min="0" required>
             </div>

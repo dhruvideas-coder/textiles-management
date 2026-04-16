@@ -31,6 +31,10 @@
                     <label class="form-label">Shop Name</label>
                     <input type="text" name="name" value="{{ old('name', $shop->name) }}" class="form-input" required>
                 </div>
+                <div class="sm:col-span-2">
+                    <label class="form-label">Shop Tagline (e.g. Manufacturer & Dealers in Art Silk Cloth)</label>
+                    <input type="text" name="tagline" value="{{ old('tagline', $shop->tagline) }}" class="form-input" placeholder="e.g. Manufacturer & Dealers in Art Silk Cloth">
+                </div>
                 <div>
                     <label class="form-label">Email</label>
                     <input type="email" name="email" value="{{ old('email', $shop->email) }}" class="form-input">
@@ -58,6 +62,26 @@
                 <div>
                     <label class="form-label">Pincode</label>
                     <input type="text" name="pincode" value="{{ old('pincode', $shop->pincode) }}" class="form-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="h-px bg-slate-100"></div>
+
+        <div>
+            <h2 class="mb-4 text-lg font-bold text-slate-900">Bank Details (For Invoice)</h2>
+            <div class="grid gap-4 sm:grid-cols-2">
+                <div class="sm:col-span-2">
+                    <label class="form-label">Bank Name</label>
+                    <input type="text" name="bank_name" value="{{ old('bank_name', $shop->bank_name) }}" class="form-input" placeholder="e.g. State Bank of India">
+                </div>
+                <div>
+                    <label class="form-label">Account Number</label>
+                    <input type="text" name="account_number" value="{{ old('account_number', $shop->account_number) }}" class="form-input">
+                </div>
+                <div>
+                    <label class="form-label">IFSC Code</label>
+                    <input type="text" name="ifsc_code" value="{{ old('ifsc_code', $shop->ifsc_code) }}" class="form-input">
                 </div>
             </div>
         </div>

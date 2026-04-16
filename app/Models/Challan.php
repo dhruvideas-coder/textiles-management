@@ -18,6 +18,7 @@ class Challan extends Model
         'user_id',
         'customer_id',
         'challan_number',
+        'order_number',
         'challan_date',
         'party_name',
         'broker_name',

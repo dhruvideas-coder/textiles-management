@@ -57,8 +57,13 @@ class BillController extends Controller
     {
         $validated = $request->validate([
             'bill_number' => ['nullable', 'string', 'max:255'],
+            'order_number' => ['nullable', 'string', 'max:255'],
+            'challan_number' => ['nullable', 'string', 'max:255'],
+            'broker_name' => ['nullable', 'string', 'max:255'],
             'bill_date' => ['required', 'date'],
+            'due_date' => ['nullable', 'date'],
             'customer_id' => ['nullable', 'exists:customers,id'],
+            'delivered_to' => ['nullable', 'string', 'max:255'],
             'status' => ['required', 'in:draft,final,paid,cancelled'],
             'discount' => ['nullable', 'numeric', 'min:0'],
             'transport_charges' => ['nullable', 'numeric', 'min:0'],

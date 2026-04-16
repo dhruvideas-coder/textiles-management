@@ -21,6 +21,7 @@ class ChallanItem extends Model
         'meters',
         'weight',
         'remarks',
+        'measurements',
         'sort_order',
     ];
 
@@ -29,6 +30,7 @@ class ChallanItem extends Model
         return [
             'meters' => 'decimal:2',
             'weight' => 'decimal:2',
+            'measurements' => 'array',
         ];
     }
 

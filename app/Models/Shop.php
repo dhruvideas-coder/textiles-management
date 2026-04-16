@@ -14,12 +14,16 @@ class Shop extends Model
 
     protected $fillable = [
         'name',
+        'tagline',
         'slug',
         'code',
         'owner_user_id',
         'email',
         'phone',
         'gstin',
+        'bank_name',
+        'account_number',
+        'ifsc_code',
         'logo_path',
         'theme_color',
         'footer_text',

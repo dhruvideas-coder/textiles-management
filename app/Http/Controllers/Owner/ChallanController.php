@@ -45,6 +45,7 @@ class ChallanController extends Controller
     {
         $validated = $request->validate([
             'challan_number' => ['nullable', 'string', 'max:255'],
+            'order_number' => ['nullable', 'string', 'max:255'],
             'challan_date' => ['required', 'date'],
             'customer_id' => ['nullable', 'exists:customers,id'],
             'party_name' => ['required', 'string', 'max:255'],
@@ -57,6 +58,7 @@ class ChallanController extends Controller
             'items.*.pieces' => ['nullable', 'numeric', 'min:0'],
             'items.*.meters' => ['nullable', 'numeric', 'min:0'],
             'items.*.weight' => ['nullable', 'numeric', 'min:0'],
+            'items.*.measurements' => ['nullable', 'array'],
             'items.*.remarks' => ['nullable', 'string'],
         ]);
 

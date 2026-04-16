@@ -35,6 +35,14 @@
                 @endif
             </div>
         </div>
+        <div class="mt-4 grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 text-[11px] border-y border-slate-100 py-3">
+            <div><span class="text-slate-500 block uppercase font-bold text-[10px]">Order No</span> {{ $bill->order_number ?? '—' }}</div>
+            <div><span class="text-slate-500 block uppercase font-bold text-[10px]">Challan No</span> {{ $bill->challan_number ?? '—' }}</div>
+            <div><span class="text-slate-500 block uppercase font-bold text-[10px]">Broker</span> {{ $bill->broker_name ?? '—' }}</div>
+            <div><span class="text-slate-500 block uppercase font-bold text-[10px]">Due Date</span> {{ $bill->due_date?->format('d/m/Y') ?? '—' }}</div>
+            <div><span class="text-slate-500 block uppercase font-bold text-[10px]">Delivered To</span> {{ $bill->delivered_to ?? '—' }}</div>
+            <div><span class="text-slate-500 block uppercase font-bold text-[10px]">HSN Code</span> {{ $bill->items->first()?->product?->hsn_code ?? '—' }}</div>
+        </div>
         @if($bill->customer)
             <div class="mt-4 rounded-xl bg-slate-50 p-4">
                 <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Customer</p>

@@ -7,14 +7,30 @@
 
     <div class="card">
         <h2 class="mb-5 text-lg font-bold text-slate-900">Bill Information</h2>
-        <div class="grid gap-4 sm:grid-cols-3">
+        <div class="grid gap-4 sm:grid-cols-4">
             <div>
                 <label class="form-label">Bill Number</label>
                 <input type="text" name="bill_number" value="{{ old('bill_number', $nextBillNumber) }}" class="form-input">
             </div>
+             <div>
+                <label class="form-label">Order No.</label>
+                <input type="text" name="order_number" value="{{ old('order_number') }}" class="form-input" placeholder="e.g. 101">
+            </div>
+             <div>
+                <label class="form-label">Challan No.</label>
+                <input type="text" name="challan_number" value="{{ old('challan_number') }}" class="form-input" placeholder="e.g. 03">
+            </div>
+             <div>
+                <label class="form-label">Broker Name</label>
+                <input type="text" name="broker_name" value="{{ old('broker_name') }}" class="form-input" placeholder="e.g. Ravi">
+            </div>
             <div>
                 <label class="form-label">Bill Date <span class="text-red-500">*</span></label>
                 <input type="date" name="bill_date" value="{{ old('bill_date', date('Y-m-d')) }}" class="form-input" required>
+            </div>
+            <div>
+                <label class="form-label">Due Date</label>
+                <input type="date" name="due_date" value="{{ old('due_date') }}" class="form-input">
             </div>
             <div>
                 <label class="form-label">Customer</label>
@@ -24,6 +40,10 @@
                         <option value="{{ $c->id }}" {{ old('customer_id') == $c->id ? 'selected' : '' }}>{{ $c->name }} {{ $c->phone ? "($c->phone)" : '' }}</option>
                     @endforeach
                 </select>
+            </div>
+             <div>
+                <label class="form-label">Delivered To</label>
+                <input type="text" name="delivered_to" value="{{ old('delivered_to') }}" class="form-input" placeholder="e.g. Shop Name">
             </div>
             <div>
                 <label class="form-label">Status <span class="text-red-500">*</span></label>

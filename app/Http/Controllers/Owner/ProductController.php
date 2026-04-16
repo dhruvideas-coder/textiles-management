@@ -38,6 +38,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'sku' => ['nullable', 'string', 'max:255'],
             'design_number' => ['nullable', 'string', 'max:255'],
+            'hsn_code' => ['nullable', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'current_stock_meters' => ['required', 'numeric', 'min:0'],
@@ -71,6 +72,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'sku' => ['nullable', 'string', 'max:255'],
             'design_number' => ['nullable', 'string', 'max:255'],
+            'hsn_code' => ['nullable', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'current_stock_meters' => ['required', 'numeric', 'min:0'],

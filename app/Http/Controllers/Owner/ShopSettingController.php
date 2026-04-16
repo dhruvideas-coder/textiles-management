@@ -22,9 +22,13 @@ class ShopSettingController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'tagline' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email'],
             'phone' => ['nullable', 'string', 'max:20'],
             'gstin' => ['nullable', 'string', 'max:20'],
+            'bank_name' => ['nullable', 'string', 'max:255'],
+            'account_number' => ['nullable', 'string', 'max:255'],
+            'ifsc_code' => ['nullable', 'string', 'max:255'],
             'theme_color' => ['nullable', 'string', 'max:20'],
             'footer_text' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'image', 'max:2048'],

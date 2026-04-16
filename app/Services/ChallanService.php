@@ -32,6 +32,7 @@ class ChallanService
                 'user_id' => $user->id,
                 'customer_id' => $payload['customer_id'] ?? null,
                 'challan_number' => $payload['challan_number'] ?: $this->nextChallanNumber($user->shop_id),
+                'order_number' => $payload['order_number'] ?? null,
                 'challan_date' => $payload['challan_date'],
                 'party_name' => $payload['party_name'],
                 'broker_name' => $payload['broker_name'] ?? null,
@@ -48,6 +49,7 @@ class ChallanService
                     'meters' => (float) ($item['meters'] ?? 0),
                     'weight' => (float) ($item['weight'] ?? 0),
                     'remarks' => $item['remarks'] ?? null,
+                    'measurements' => $item['measurements'] ?? null,
                     'sort_order' => $index,
                 ]);
             }
@@ -60,6 +62,7 @@ class ChallanService
     {
         return $this->createChallan($user, [
             'challan_number' => null,
+            'order_number' => $challan->order_number,
             'challan_date' => now()->toDateString(),
             'customer_id' => $challan->customer_id,
             'party_name' => $challan->party_name,
@@ -72,6 +75,7 @@ class ChallanService
                 'pieces' => $item->pieces,
                 'meters' => $item->meters,
                 'weight' => $item->weight,
+                'measurements' => $item->measurements,
                 'remarks' => $item->remarks,
             ])->all(),
         ]);

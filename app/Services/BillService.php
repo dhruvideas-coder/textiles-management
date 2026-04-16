@@ -84,8 +84,12 @@ class BillService
                 'user_id' => $user->id,
                 'customer_id' => $payload['customer_id'] ?? null,
                 'bill_number' => $payload['bill_number'] ?: $this->nextBillNumber($shop->id),
+                'order_number' => $payload['order_number'] ?? null,
+                'challan_number' => $payload['challan_number'] ?? null,
+                'broker_name' => $payload['broker_name'] ?? null,
                 'bill_date' => $payload['bill_date'],
                 'due_date' => $payload['due_date'] ?? null,
+                'delivered_to' => $payload['delivered_to'] ?? null,
                 'status' => $payload['status'] ?? 'final',
                 ...$calculated['totals'],
                 'paid_amount' => (float) ($payload['paid_amount'] ?? 0),
@@ -106,8 +110,6 @@ class BillService
                 }
             }
 
-
-
             return $bill->load(['customer', 'items.product', 'shop', 'user']);
         });
     }
@@ -116,8 +118,12 @@ class BillService
     {
         return $this->createBill($user, [
             'bill_number' => null,
+            'order_number' => $bill->order_number,
+            'challan_number' => $bill->challan_number,
+            'broker_name' => $bill->broker_name,
             'bill_date' => now()->toDateString(),
             'due_date' => null,
+            'delivered_to' => $bill->delivered_to,
             'customer_id' => $bill->customer_id,
             'status' => 'draft',
             'discount' => $bill->discount,
