@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Plan;
 use App\Models\Shop;
-use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,16 +17,13 @@ class ShopController extends Controller
     public function index(): View
     {
         return view('admin.shops.index', [
-            'shops' => Shop::with(['owner', 'subscription.plan'])->latest()->paginate(20),
-            'plans' => Plan::orderBy('monthly_price')->get(),
+            'shops' => Shop::with(['owner'])->latest()->paginate(20),
         ]);
     }
 
     public function create(): View
     {
-        return view('admin.shops.create', [
-            'plans' => Plan::where('is_active', true)->get(),
-        ]);
+        return view('admin.shops.create');
     }
 
     public function store(Request $request): RedirectResponse
@@ -46,7 +41,6 @@ class ShopController extends Controller
             'pincode' => ['nullable', 'string', 'max:12'],
             'owner_name' => ['required', 'string', 'max:255'],
             'owner_email' => ['required', 'email', 'unique:users,email'],
-            'plan_id' => ['required', 'exists:plans,id'],
         ]);
 
         DB::transaction(function () use ($validated): void {
@@ -76,14 +70,7 @@ class ShopController extends Controller
             $owner->shop_id = $shop->id;
             $owner->save();
 
-            Subscription::create([
-                'shop_id' => $shop->id,
-                'plan_id' => $validated['plan_id'],
-                'status' => 'active',
-                'started_at' => now()->toDateString(),
-                'current_period_start' => now()->startOfMonth()->toDateString(),
-                'current_period_end' => now()->endOfMonth()->toDateString(),
-            ]);
+
         });
 
         return redirect()->route('admin.shops.index')->with('status', 'Shop created successfully.');
@@ -92,7 +79,7 @@ class ShopController extends Controller
     public function show(Shop $shop): View
     {
         return view('admin.shops.show', [
-            'shop' => $shop->load(['owner', 'users.roles', 'subscription.plan']),
+            'shop' => $shop->load(['owner', 'users.roles']),
         ]);
     }
 
@@ -100,8 +87,6 @@ class ShopController extends Controller
     {
         return view('admin.shops.edit', [
             'shop' => $shop,
-            'plans' => Plan::where('is_active', true)->get(),
-            'currentSubscription' => $shop->subscription()->latest()->first(),
         ]);
     }
 

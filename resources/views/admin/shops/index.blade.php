@@ -16,7 +16,7 @@
                 <tr>
                     <th class="table-th">Shop</th>
                     <th class="table-th hidden sm:table-cell">Owner</th>
-                    <th class="table-th hidden md:table-cell">Plan</th>
+
                     <th class="table-th">Status</th>
                     <th class="table-th text-right">Actions</th>
                 </tr>
@@ -34,9 +34,7 @@
                             <p class="text-sm">{{ $shop->owner?->name ?? '—' }}</p>
                             <p class="text-xs text-slate-400">{{ $shop->owner?->email }}</p>
                         </td>
-                        <td class="table-td hidden md:table-cell">
-                            <span class="badge-blue">{{ $shop->subscription?->plan?->name ?? 'None' }}</span>
-                        </td>
+
                         <td class="table-td">
                             @if($shop->is_active)
                                 <span class="badge-green">Active</span>

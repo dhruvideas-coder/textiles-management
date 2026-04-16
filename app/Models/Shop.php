@@ -47,10 +47,7 @@ class Shop extends Model
         return $this->hasMany(User::class);
     }
 
-    public function subscription(): HasOne
-    {
-        return $this->hasOne(Subscription::class)->latestOfMany();
-    }
+
 
     public function bills(): HasMany
     {

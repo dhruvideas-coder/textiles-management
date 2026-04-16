@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Services\SubscriptionService;
+
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,18 +13,15 @@ use Illuminate\View\View;
 
 class StaffController extends Controller
 {
-    public function __construct(private readonly SubscriptionService $subscriptionService)
+    public function __construct()
     {
     }
 
     public function index(): View
     {
         $shop = auth()->user()->shop;
-        $subscription = $this->subscriptionService->activeSubscription($shop);
-
         return view('owner.staff.index', [
             'staff' => User::where('shop_id', $shop->id)->role(User::ROLE_STAFF)->latest()->get(),
-            'staffLimit' => $subscription?->plan?->max_staff_users,
         ]);
     }
 
@@ -36,7 +33,6 @@ class StaffController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $shop = auth()->user()->shop;
-        $this->subscriptionService->assertCanAddStaff($shop);
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],

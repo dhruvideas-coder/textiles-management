@@ -17,7 +17,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $permissions = [
             'shops.manage',
             'users.manage',
-            'subscriptions.manage',
+
             'platform.analytics.view',
             'impersonation.use',
             'bills.manage',

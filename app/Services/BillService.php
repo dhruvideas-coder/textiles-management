@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class BillService
 {
-    public function __construct(private readonly SubscriptionService $subscriptionService)
+    public function __construct()
     {
     }
 
@@ -75,7 +75,6 @@ class BillService
     public function createBill(User $user, array $payload): Bill
     {
         $shop = $user->shop;
-        $this->subscriptionService->assertCanCreateBill($shop);
 
         return DB::transaction(function () use ($payload, $shop, $user): Bill {
             $calculated = $this->calculateTotals($payload['items'], $payload);
@@ -107,7 +106,7 @@ class BillService
                 }
             }
 
-            $this->subscriptionService->incrementUsage($shop, 'bills');
+
 
             return $bill->load(['customer', 'items.inventory', 'shop', 'user']);
         });

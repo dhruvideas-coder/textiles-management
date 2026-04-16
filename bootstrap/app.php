@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Middleware\EnsureFeatureAccess;
+
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\EnsureShopIsActive;
 use App\Http\Middleware\ResolveTenant;
@@ -25,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'tenant.role' => EnsureRole::class,
-            'feature' => EnsureFeatureAccess::class,
+
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,

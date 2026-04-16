@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\AnalyticsController as AdminAnalyticsController;
 use App\Http\Controllers\Admin\ImpersonationController;
 use App\Http\Controllers\Admin\ShopController;
-use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\DashboardController;
@@ -14,7 +13,6 @@ use App\Http\Controllers\Owner\CustomerController;
 use App\Http\Controllers\Owner\InventoryController;
 use App\Http\Controllers\Owner\ShopSettingController;
 use App\Http\Controllers\Owner\StaffController;
-use App\Http\Controllers\Owner\SubscriptionController as OwnerSubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
@@ -37,8 +35,7 @@ Route::middleware('auth')->group(function (): void {
         ->group(function (): void {
             Route::resource('shops', ShopController::class);
             Route::resource('users', UserController::class);
-            Route::get('subscriptions', [AdminSubscriptionController::class, 'index'])->name('subscriptions.index');
-            Route::put('subscriptions/{shop}', [AdminSubscriptionController::class, 'update'])->name('subscriptions.update');
+
             Route::get('analytics', [AdminAnalyticsController::class, 'index'])->name('analytics.index');
             Route::post('impersonate/{user}', [ImpersonationController::class, 'start'])->name('impersonate.start');
             Route::post('impersonate/stop', [ImpersonationController::class, 'stop'])->name('impersonate.stop');
@@ -69,6 +66,6 @@ Route::middleware('auth')->group(function (): void {
             Route::resource('staff', StaffController::class);
             Route::get('settings', [ShopSettingController::class, 'edit'])->name('settings.edit');
             Route::put('settings', [ShopSettingController::class, 'update'])->name('settings.update');
-            Route::get('subscription', [OwnerSubscriptionController::class, 'show'])->name('subscription.show');
+
         });
 });

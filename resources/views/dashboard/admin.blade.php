@@ -60,7 +60,7 @@
                 New Shop
             </a>
             <a href="{{ route('admin.users.index') }}" class="btn-secondary">Manage Users</a>
-            <a href="{{ route('admin.subscriptions.index') }}" class="btn-secondary">Manage Plans</a>
+
         </div>
     </div>
 

@@ -68,21 +68,7 @@
         </div>
     </div>
 
-    {{-- Plan --}}
-    <div class="card">
-        <h2 class="mb-5 text-lg font-bold text-slate-900">Subscription Plan</h2>
-        <div>
-            <label for="plan_id" class="form-label">Select Plan <span class="text-red-500">*</span></label>
-            <select name="plan_id" id="plan_id" class="form-select" required>
-                <option value="">Choose plan...</option>
-                @foreach($plans as $plan)
-                    <option value="{{ $plan->id }}" {{ old('plan_id') == $plan->id ? 'selected' : '' }}>
-                        {{ $plan->name }} — ₹{{ number_format($plan->monthly_price, 0) }}/mo ({{ $plan->max_bills_per_month ?? '∞' }} bills, {{ $plan->max_staff_users ?? '∞' }} staff)
-                    </option>
-                @endforeach
-            </select>
-        </div>
-    </div>
+
 
     <div class="flex items-center gap-3">
         <button type="submit" class="btn-primary">Create Shop</button>

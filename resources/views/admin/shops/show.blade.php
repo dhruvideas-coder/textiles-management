@@ -35,23 +35,7 @@
         </div>
     </div>
 
-    {{-- Subscription --}}
-    <div class="card">
-        <h3 class="mb-3 font-bold text-slate-900">Subscription</h3>
-        @if($shop->subscription && $shop->subscription->plan)
-            <div class="flex items-center gap-4">
-                <span class="badge-blue text-base px-4 py-1">{{ $shop->subscription->plan->name }}</span>
-                <span class="text-sm text-slate-500">₹{{ number_format($shop->subscription->plan->monthly_price, 0) }}/month</span>
-                <span class="badge-green">{{ ucfirst($shop->subscription->status) }}</span>
-            </div>
-            <div class="mt-3 flex gap-6 text-sm text-slate-500">
-                <span>Bills: {{ $shop->subscription->plan->max_bills_per_month ?? '∞' }}/mo</span>
-                <span>Staff: {{ $shop->subscription->plan->max_staff_users ?? '∞' }}</span>
-            </div>
-        @else
-            <p class="text-sm text-slate-400">No active subscription</p>
-        @endif
-    </div>
+
 
     {{-- Owner --}}
     <div class="card">
