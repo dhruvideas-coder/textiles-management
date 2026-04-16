@@ -2,90 +2,58 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory;
-    use HasRoles;
-    use Notifiable;
+    use HasFactory, Notifiable;
 
-    public const ROLE_SUPER_ADMIN = 'super_admin';
-
-    public const ROLE_OWNER = 'owner';
-
-    public const ROLE_STAFF = 'staff';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
-        'google_id',
-        'shop_id',
-        'is_active',
         'password',
+        'provider',
+        'provider_id',
+        'role',
+        'owner_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_active' => 'boolean',
-            'last_login_at' => 'datetime',
         ];
     }
-
-    public function shop(): BelongsTo
+    
+    public function owner()
     {
-        return $this->belongsTo(Shop::class);
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
-    public function ownedShop(): HasOne
+    public function canAccessPanel(Panel $panel): bool
     {
-        return $this->hasOne(Shop::class, 'owner_user_id');
+        return in_array($this->role, ['admin', 'owner', 'staff']);
     }
 
-    public function bills(): HasMany
+    protected static function booted()
     {
-        return $this->hasMany(Bill::class);
-    }
-
-    public function challans(): HasMany
-    {
-        return $this->hasMany(Challan::class);
-    }
-
-    public function isSuperAdmin(): bool
-    {
-        return $this->hasRole(self::ROLE_SUPER_ADMIN);
+        static::creating(function ($model) {
+            if (auth()->check() && empty($model->owner_id)) {
+                $user = auth()->user();
+                if ($user->role === 'owner') {
+                    $model->owner_id = $user->id;
+                }
+            }
+        });
     }
 }

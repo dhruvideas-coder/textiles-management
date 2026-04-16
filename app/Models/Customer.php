@@ -2,50 +2,49 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\BelongsToShop;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Customer extends Model
 {
-    use BelongsToShop;
-    use HasFactory;
-
     protected $fillable = [
-        'shop_id',
+        'owner_id',
         'name',
-        'email',
-        'phone',
-        'gstin',
         'address',
-        'city',
-        'state',
-        'pincode',
-        'is_active',
-        'notes',
+        'GSTIN',
+        'mobile_number',
     ];
 
-    protected function casts(): array
+    protected static function booted()
     {
-        return [
-            'is_active' => 'boolean',
-        ];
+        static::addGlobalScope('owner', function (Builder $builder) {
+            if (auth()->check() && auth()->user()->role !== 'admin') {
+                $ownerId = auth()->user()->role === 'owner'
+                    ? auth()->id()
+                    : auth()->user()->owner_id;
+                $builder->where(function ($q) use ($ownerId) {
+                    $q->where('owner_id', $ownerId)
+                      ->orWhereNull('owner_id');
+                });
+            }
+        });
+
+        static::creating(function ($model) {
+            // Auto-assign owner_id only if not already set (admin will set it via form)
+            if (auth()->check() && empty($model->owner_id)) {
+                $user = auth()->user();
+                if ($user->role === 'owner') {
+                    $model->owner_id = $user->id;
+                } elseif ($user->role === 'staff') {
+                    $model->owner_id = $user->owner_id;
+                }
+                // If admin, owner_id remains null (global record)
+            }
+        });
     }
 
-    public function shop(): BelongsTo
+    public function owner()
     {
-        return $this->belongsTo(Shop::class);
-    }
-
-    public function bills(): HasMany
-    {
-        return $this->hasMany(Bill::class);
-    }
-
-    public function challans(): HasMany
-    {
-        return $this->hasMany(Challan::class);
+        return $this->belongsTo(User::class, 'owner_id');
     }
 }

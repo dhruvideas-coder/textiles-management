@@ -2,50 +2,19 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\BelongsToShop;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
 class ChallanItem extends Model
 {
-    use BelongsToShop;
-    use HasFactory;
-
     protected $fillable = [
-        'shop_id',
         'challan_id',
-        'product_id',
-        'product_name',
-        'pieces',
+        'column_no',
+        'row_no',
         'meters',
-        'weight',
-        'remarks',
-        'measurements',
-        'sort_order',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'meters' => 'decimal:2',
-            'weight' => 'decimal:2',
-            'measurements' => 'array',
-        ];
-    }
-
-    public function shop(): BelongsTo
-    {
-        return $this->belongsTo(Shop::class);
-    }
-
-    public function challan(): BelongsTo
+    public function challan()
     {
         return $this->belongsTo(Challan::class);
-    }
-
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Product::class);
     }
 }
