@@ -56,7 +56,7 @@
                     @foreach($bill->items as $i => $item)
                         <tr>
                             <td class="table-td text-slate-400">{{ $i + 1 }}</td>
-                            <td class="table-td font-medium">{{ $item->description }} @if($item->inventory)<span class="text-xs text-slate-400">({{ $item->inventory->name }})</span>@endif</td>
+                            <td class="table-td font-medium">{{ $item->description }} @if($item->product)<span class="text-xs text-slate-400">({{ $item->product->name }})</span>@endif</td>
                             <td class="table-td text-right">{{ $item->pieces }}</td>
                             <td class="table-td text-right">{{ number_format($item->meters, 2) }}</td>
                             <td class="table-td text-right">₹{{ number_format($item->rate, 2) }}</td>

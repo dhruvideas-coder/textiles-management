@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\Challan;
 use App\Models\Customer;
-use App\Models\Inventory;
+use App\Models\Product;
 use App\Services\ChallanService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
@@ -36,7 +36,7 @@ class ChallanController extends Controller
     {
         return view('owner.challans.create', [
             'customers' => Customer::orderBy('name')->get(),
-            'inventoryItems' => Inventory::where('is_active', true)->orderBy('name')->get(),
+            'products' => Product::where('is_active', true)->orderBy('name')->get(),
             'nextChallanNumber' => $this->challanService->nextChallanNumber(auth()->user()->shop_id),
         ]);
     }
@@ -52,7 +52,7 @@ class ChallanController extends Controller
             'remarks' => ['nullable', 'string'],
             'status' => ['required', 'in:draft,final,cancelled'],
             'items' => ['required', 'array', 'min:1'],
-            'items.*.inventory_id' => ['nullable', 'exists:inventory,id'],
+            'items.*.product_id' => ['nullable', 'exists:products,id'],
             'items.*.product_name' => ['required', 'string', 'max:255'],
             'items.*.pieces' => ['nullable', 'numeric', 'min:0'],
             'items.*.meters' => ['nullable', 'numeric', 'min:0'],
@@ -68,7 +68,7 @@ class ChallanController extends Controller
     public function show(Challan $challan): View
     {
         return view('owner.challans.show', [
-            'challan' => $challan->load(['customer', 'items.inventory', 'shop', 'user']),
+            'challan' => $challan->load(['customer', 'items.product', 'shop', 'user']),
         ]);
     }
 
@@ -77,7 +77,7 @@ class ChallanController extends Controller
         return view('owner.challans.edit', [
             'challan' => $challan->load('items'),
             'customers' => Customer::orderBy('name')->get(),
-            'inventoryItems' => Inventory::where('is_active', true)->orderBy('name')->get(),
+            'products' => Product::where('is_active', true)->orderBy('name')->get(),
         ]);
     }
 
@@ -104,7 +104,7 @@ class ChallanController extends Controller
     public function downloadPdf(Challan $challan)
     {
         $pdf = Pdf::loadView('owner.challans.pdf', [
-            'challan' => $challan->load(['customer', 'items.inventory', 'shop', 'user']),
+            'challan' => $challan->load(['customer', 'items.product', 'shop', 'user']),
         ]);
 
         return $pdf->download("{$challan->challan_number}.pdf");

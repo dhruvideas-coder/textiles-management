@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('shop_id')->constrained('shops')->cascadeOnDelete();
             $table->foreignId('challan_id')->constrained('challans')->cascadeOnDelete();
-            $table->foreignId('inventory_id')->nullable()->constrained('inventory')->nullOnDelete();
+            $table->foreignId('product_id')->nullable()->constrained('products')->nullOnDelete();
             $table->string('product_name');
             $table->unsignedInteger('pieces')->default(0);
             $table->decimal('meters', 12, 2)->default(0);

@@ -47,7 +47,7 @@
                 <thead class="border-b border-slate-100 bg-slate-50/50"><tr>
                     <th class="table-th w-8">#</th>
                     <th class="table-th">Description</th>
-                    <th class="table-th hidden sm:table-cell">Inventory</th>
+                    <th class="table-th hidden sm:table-cell">Product</th>
                     <th class="table-th w-20">Pcs</th>
                     <th class="table-th w-24">Meters</th>
                     <th class="table-th w-24">Rate</th>
@@ -60,10 +60,10 @@
                             <td class="table-td text-xs text-slate-400" x-text="index + 1"></td>
                             <td class="table-td"><input type="text" :name="`items[${index}][description]`" x-model="item.description" class="form-input text-sm" required></td>
                             <td class="table-td hidden sm:table-cell">
-                                <select :name="`items[${index}][inventory_id]`" x-model="item.inventory_id" class="form-select text-sm" @change="prefillFromInventory(index)">
+                                <select :name="`items[${index}][product_id]`" x-model="item.product_id" class="form-select text-sm" @change="prefillFromProduct(index)">
                                     <option value="">—</option>
-                                    @foreach($inventoryItems as $inv)
-                                        <option value="{{ $inv->id }}" data-name="{{ $inv->name }}" data-rate="{{ $inv->rate }}">{{ $inv->name }} ({{ $inv->current_stock_meters }}m)</option>
+                                    @foreach($products as $p)
+                                        <option value="{{ $p->id }}" data-name="{{ $p->name }}" data-rate="{{ $p->rate }}">{{ $p->name }} ({{ $p->current_stock_meters }}m)</option>
                                     @endforeach
                                 </select>
                             </td>
@@ -141,14 +141,14 @@
 <script>
 function billForm() {
     return {
-        items: [{ description: '', inventory_id: '', pieces: 0, meters: 0, rate: 0 }],
+        items: [{ description: '', product_id: '', pieces: 0, meters: 0, rate: 0 }],
         discount: 0, transport: 0, cgst: 0, sgst: 0, igst: 0, roundOff: 0,
         get subtotal() { return this.items.reduce((s, i) => s + (i.meters * i.rate), 0); },
         get grandTotal() { return this.subtotal - this.discount + this.transport + this.cgst + this.sgst + this.igst + this.roundOff; },
-        addItem() { this.items.push({ description: '', inventory_id: '', pieces: 0, meters: 0, rate: 0 }); },
+        addItem() { this.items.push({ description: '', product_id: '', pieces: 0, meters: 0, rate: 0 }); },
         removeItem(i) { if (this.items.length > 1) this.items.splice(i, 1); },
-        prefillFromInventory(i) {
-            const sel = document.querySelector(`select[name="items[${i}][inventory_id]"]`);
+        prefillFromProduct(i) {
+            const sel = document.querySelector(`select[name="items[${i}][product_id]"]`);
             const opt = sel?.selectedOptions[0];
             if (opt && opt.value) {
                 this.items[i].description = opt.dataset.name || '';

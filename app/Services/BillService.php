@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Bill;
-use App\Models\Inventory;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -37,7 +37,7 @@ class BillService
             $amount = round($meters * $rate, 2);
 
             return [
-                'inventory_id' => $item['inventory_id'] ?? null,
+                'product_id' => $item['product_id'] ?? null,
                 'description' => $item['description'] ?? 'Textile Item',
                 'pieces' => (int) ($item['pieces'] ?? 0),
                 'meters' => $meters,
@@ -99,8 +99,8 @@ class BillService
                     'sort_order' => $index,
                 ]);
 
-                if (! empty($item['inventory_id']) && $item['meters'] > 0) {
-                    Inventory::where('id', $item['inventory_id'])
+                if (! empty($item['product_id']) && $item['meters'] > 0) {
+                    Product::where('id', $item['product_id'])
                         ->where('shop_id', $shop->id)
                         ->decrement('current_stock_meters', $item['meters']);
                 }
@@ -108,7 +108,7 @@ class BillService
 
 
 
-            return $bill->load(['customer', 'items.inventory', 'shop', 'user']);
+            return $bill->load(['customer', 'items.product', 'shop', 'user']);
         });
     }
 
@@ -129,7 +129,7 @@ class BillService
             'paid_amount' => 0,
             'notes' => $bill->notes,
             'items' => $bill->items->map(fn ($item) => [
-                'inventory_id' => $item->inventory_id,
+                'product_id' => $item->product_id,
                 'description' => $item->description,
                 'pieces' => $item->pieces,
                 'meters' => $item->meters,

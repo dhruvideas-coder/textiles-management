@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Bill;
 use App\Models\BillItem;
 use App\Models\Customer;
-use App\Models\Inventory;
+use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Support\Facades\DB;
 
@@ -65,7 +65,7 @@ class AnalyticsService
             ->limit(5)
             ->get();
 
-        $stockOverview = Inventory::withoutGlobalScope('shop')
+        $stockOverview = Product::withoutGlobalScope('shop')
             ->where('shop_id', $shop->id)
             ->orderBy('name')
             ->get(['id', 'name', 'current_stock_meters', 'low_stock_threshold']);

@@ -15,7 +15,7 @@ class BillItem extends Model
     protected $fillable = [
         'shop_id',
         'bill_id',
-        'inventory_id',
+        'product_id',
         'description',
         'pieces',
         'meters',
@@ -43,8 +43,8 @@ class BillItem extends Model
         return $this->belongsTo(Bill::class);
     }
 
-    public function inventory(): BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(Inventory::class);
+        return $this->belongsTo(Product::class);
     }
 }

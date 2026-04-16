@@ -23,7 +23,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'bills.manage',
             'challans.manage',
             'customers.manage',
-            'inventory.manage',
+            'products.manage',
             'shop.analytics.view',
             'shop.settings.manage',
             'staff.manage',
@@ -42,7 +42,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'bills.manage',
             'challans.manage',
             'customers.manage',
-            'inventory.manage',
+            'products.manage',
             'shop.analytics.view',
             'shop.settings.manage',
             'staff.manage',
@@ -51,7 +51,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'bills.manage',
             'challans.manage',
             'customers.manage',
-            'inventory.manage',
+            'products.manage',
             'shop.analytics.view',
         ]);
     }

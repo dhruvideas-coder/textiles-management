@@ -15,7 +15,7 @@ class ChallanItem extends Model
     protected $fillable = [
         'shop_id',
         'challan_id',
-        'inventory_id',
+        'product_id',
         'product_name',
         'pieces',
         'meters',
@@ -42,8 +42,8 @@ class ChallanItem extends Model
         return $this->belongsTo(Challan::class);
     }
 
-    public function inventory(): BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(Inventory::class);
+        return $this->belongsTo(Product::class);
     }
 }

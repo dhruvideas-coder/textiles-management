@@ -64,8 +64,8 @@ class Shop extends Model
         return $this->hasMany(Customer::class);
     }
 
-    public function inventory(): HasMany
+    public function products(): HasMany
     {
-        return $this->hasMany(Inventory::class);
+        return $this->hasMany(Product::class);
     }
 }

@@ -58,7 +58,7 @@
                 <thead class="border-b border-slate-100 bg-slate-50/50"><tr>
                     <th class="table-th w-8">#</th>
                     <th class="table-th">Product Name</th>
-                    <th class="table-th hidden sm:table-cell">Inventory</th>
+                    <th class="table-th hidden sm:table-cell">Linked Product</th>
                     <th class="table-th w-24">Pcs</th>
                     <th class="table-th w-24">Meters</th>
                     <th class="table-th w-24">Weight</th>
@@ -70,10 +70,10 @@
                             <td class="table-td text-xs text-slate-400" x-text="index + 1"></td>
                             <td class="table-td"><input type="text" :name="`items[${index}][product_name]`" x-model="item.product_name" class="form-input text-sm" required></td>
                             <td class="table-td hidden sm:table-cell">
-                                <select :name="`items[${index}][inventory_id]`" x-model="item.inventory_id" class="form-select text-sm" @change="prefillFromInventory(index)">
+                                <select :name="`items[${index}][product_id]`" x-model="item.product_id" class="form-select text-sm" @change="prefillFromProduct(index)">
                                     <option value="">—</option>
-                                    @foreach($inventoryItems as $inv)
-                                        <option value="{{ $inv->id }}" data-name="{{ $inv->name }}">{{ $inv->name }} ({{ $inv->current_stock_meters }}m)</option>
+                                    @foreach($products as $p)
+                                        <option value="{{ $p->id }}" data-name="{{ $p->name }}">{{ $p->name }} ({{ $p->current_stock_meters }}m)</option>
                                     @endforeach
                                 </select>
                             </td>
@@ -98,11 +98,11 @@
 <script>
 function challanForm() {
     return {
-        items: [{ product_name: '', inventory_id: '', pieces: 0, meters: 0, weight: 0 }],
-        addItem() { this.items.push({ product_name: '', inventory_id: '', pieces: 0, meters: 0, weight: 0 }); },
+        items: [{ product_name: '', product_id: '', pieces: 0, meters: 0, weight: 0 }],
+        addItem() { this.items.push({ product_name: '', product_id: '', pieces: 0, meters: 0, weight: 0 }); },
         removeItem(i) { if (this.items.length > 1) this.items.splice(i, 1); },
-        prefillFromInventory(i) {
-            const sel = document.querySelector(`select[name="items[${i}][inventory_id]"]`);
+        prefillFromProduct(i) {
+            const sel = document.querySelector(`select[name="items[${i}][product_id]"]`);
             const opt = sel?.selectedOptions[0];
             if (opt && opt.value) {
                 this.items[i].product_name = opt.dataset.name || '';

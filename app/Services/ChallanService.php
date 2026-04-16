@@ -42,7 +42,7 @@ class ChallanService
             foreach (($payload['items'] ?? []) as $index => $item) {
                 $challan->items()->create([
                     'shop_id' => $user->shop_id,
-                    'inventory_id' => $item['inventory_id'] ?? null,
+                    'product_id' => $item['product_id'] ?? null,
                     'product_name' => $item['product_name'] ?? 'Textile Item',
                     'pieces' => (int) ($item['pieces'] ?? 0),
                     'meters' => (float) ($item['meters'] ?? 0),
@@ -52,7 +52,7 @@ class ChallanService
                 ]);
             }
 
-            return $challan->load(['items.inventory', 'customer', 'shop', 'user']);
+            return $challan->load(['items.product', 'customer', 'shop', 'user']);
         });
     }
 
@@ -67,7 +67,7 @@ class ChallanService
             'remarks' => $challan->remarks,
             'status' => 'draft',
             'items' => $challan->items->map(fn ($item) => [
-                'inventory_id' => $item->inventory_id,
+                'product_id' => $item->product_id,
                 'product_name' => $item->product_name,
                 'pieces' => $item->pieces,
                 'meters' => $item->meters,

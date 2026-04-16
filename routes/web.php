@@ -10,7 +10,7 @@ use App\Http\Controllers\Owner\AnalyticsController as OwnerAnalyticsController;
 use App\Http\Controllers\Owner\BillController;
 use App\Http\Controllers\Owner\ChallanController;
 use App\Http\Controllers\Owner\CustomerController;
-use App\Http\Controllers\Owner\InventoryController;
+use App\Http\Controllers\Owner\ProductController;
 use App\Http\Controllers\Owner\ShopSettingController;
 use App\Http\Controllers\Owner\StaffController;
 use Illuminate\Support\Facades\Route;
@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function (): void {
             Route::get('challans/{challan}/pdf', [ChallanController::class, 'downloadPdf'])->name('challans.pdf');
 
             Route::resource('customers', CustomerController::class);
-            Route::resource('inventory', InventoryController::class);
+            Route::resource('products', ProductController::class);
             Route::get('analytics', [OwnerAnalyticsController::class, 'index'])->name('analytics.index');
         });
 

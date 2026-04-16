@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\Bill;
 use App\Models\Customer;
-use App\Models\Inventory;
+use App\Models\Product;
 use App\Services\BillService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
@@ -48,7 +48,7 @@ class BillController extends Controller
     {
         return view('owner.bills.create', [
             'customers' => Customer::orderBy('name')->get(),
-            'inventoryItems' => Inventory::where('is_active', true)->orderBy('name')->get(),
+            'products' => Product::where('is_active', true)->orderBy('name')->get(),
             'nextBillNumber' => $this->billService->nextBillNumber(auth()->user()->shop_id),
         ]);
     }
@@ -69,7 +69,7 @@ class BillController extends Controller
             'paid_amount' => ['nullable', 'numeric', 'min:0'],
             'notes' => ['nullable', 'string'],
             'items' => ['required', 'array', 'min:1'],
-            'items.*.inventory_id' => ['nullable', 'exists:inventory,id'],
+            'items.*.product_id' => ['nullable', 'exists:products,id'],
             'items.*.description' => ['required', 'string', 'max:255'],
             'items.*.pieces' => ['nullable', 'numeric', 'min:0'],
             'items.*.meters' => ['required', 'numeric', 'min:0.01'],
@@ -84,7 +84,7 @@ class BillController extends Controller
     public function show(Bill $bill): View
     {
         return view('owner.bills.show', [
-            'bill' => $bill->load(['customer', 'items.inventory', 'shop', 'user']),
+            'bill' => $bill->load(['customer', 'items.product', 'shop', 'user']),
         ]);
     }
 
@@ -93,7 +93,7 @@ class BillController extends Controller
         return view('owner.bills.edit', [
             'bill' => $bill->load('items'),
             'customers' => Customer::orderBy('name')->get(),
-            'inventoryItems' => Inventory::where('is_active', true)->orderBy('name')->get(),
+            'products' => Product::where('is_active', true)->orderBy('name')->get(),
         ]);
     }
 
@@ -121,7 +121,7 @@ class BillController extends Controller
     public function downloadPdf(Bill $bill)
     {
         $pdf = Pdf::loadView('owner.bills.pdf', [
-            'bill' => $bill->load(['customer', 'items.inventory', 'shop', 'user']),
+            'bill' => $bill->load(['customer', 'items.product', 'shop', 'user']),
         ]);
 
         return $pdf->download("{$bill->bill_number}.pdf");
@@ -130,7 +130,7 @@ class BillController extends Controller
     public function printThermal(Bill $bill): View
     {
         return view('owner.bills.thermal', [
-            'bill' => $bill->load(['customer', 'items.inventory', 'shop']),
+            'bill' => $bill->load(['customer', 'items.product', 'shop']),
         ]);
     }
 }

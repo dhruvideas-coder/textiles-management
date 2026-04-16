@@ -8,21 +8,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
-class Inventory extends Model
+class Product extends Model
 {
     use BelongsToShop;
     use HasFactory;
 
-    protected $table = 'inventory';
+    protected $table = 'products';
 
     protected $fillable = [
         'shop_id',
         'sku',
+        'design_number',
         'name',
         'description',
         'current_stock_meters',
         'low_stock_threshold',
         'rate',
+        'purchase_rate',
         'unit',
         'is_active',
     ];
@@ -33,6 +35,7 @@ class Inventory extends Model
             'current_stock_meters' => 'decimal:2',
             'low_stock_threshold' => 'decimal:2',
             'rate' => 'decimal:2',
+            'purchase_rate' => 'decimal:2',
             'is_active' => 'boolean',
         ];
     }
