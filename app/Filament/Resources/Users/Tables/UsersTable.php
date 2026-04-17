@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Users\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -41,11 +42,15 @@ class UsersTable
                 //
             ])
             ->actions([
-                EditAction::make(),
+                EditAction::make()
+                    ->hidden(fn () => auth()->user()->role === 'owner'),
+                ViewAction::make()
+                    ->visible(fn () => auth()->user()->role === 'owner'),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->hidden(fn () => auth()->user()->role === 'owner'),
                 ]),
             ]);
     }

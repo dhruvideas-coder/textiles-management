@@ -34,13 +34,23 @@ class CustomerForm
                     ->label('Mobile Number')
                     ->tel()
                     ->maxLength(10)
-                    ->minLength(10),
+                    ->minLength(10)
+                    ->rules(['digits:10'])
+                    ->extraInputAttributes([
+                        'inputmode'  => 'numeric',
+                        'maxlength'  => '10',
+                        'onkeypress' => 'return /[0-9]/.test(event.key)',
+                        'oninput'    => 'this.value=this.value.replace(/[^0-9]/g,"").slice(0,10)',
+                    ]),
 
                 TextInput::make('GSTIN')
                     ->label('GSTIN')
                     ->maxLength(15)
                     ->minLength(15)
-                    ->placeholder('24AAAAA0000A1Z5'),
+                    ->placeholder('24AAAAA0000A1Z5')
+                    ->extraInputAttributes([
+                        'oninput' => 'this.value=this.value.replace(/[^a-zA-Z0-9]/g,"").toUpperCase()',
+                    ]),
 
                 Textarea::make('address')
                     ->label('Address')

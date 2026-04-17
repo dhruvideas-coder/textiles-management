@@ -30,7 +30,7 @@ class PdfController extends Controller
 
     public function sendChallanWhatsApp($id, WhatsAppService $service)
     {
-        $challan = Challan::with(['customer'])->findOrFail($id);
+        $challan = Challan::with(['customer', 'product', 'items', 'owner'])->findOrFail($id);
 
         $pdfContent = Pdf::loadView('pdf.challan', compact('challan'))
             ->setPaper('A4')

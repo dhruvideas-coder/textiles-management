@@ -22,6 +22,10 @@ class User extends Authenticatable implements FilamentUser
         'owner_id',
         'login_try',
         'blocked_until',
+        'business_name',
+        'business_address',
+        'mobile',
+        'gstin',
     ];
 
     protected $hidden = [

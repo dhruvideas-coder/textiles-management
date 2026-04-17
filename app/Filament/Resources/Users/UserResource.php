@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\Users\Pages\CreateUser;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
+use App\Filament\Resources\Users\Pages\ViewUser;
 use App\Filament\Resources\Users\Schemas\UserForm;
 use App\Filament\Resources\Users\Tables\UsersTable;
 use App\Models\User;
@@ -39,11 +40,7 @@ class UserResource extends Resource
     {
         return parent::getEloquentQuery()
             ->when(auth()->user()->role === 'owner', function (Builder $query) {
-                $user = auth()->user();
-                $query->where(function ($q) use ($user) {
-                    $q->where('id', $user->id)
-                      ->orWhere('owner_id', $user->id);
-                });
+                $query->where('id', auth()->id());
             })
             ->when(auth()->user()->role === 'staff', function (Builder $query) {
                 $query->where('id', auth()->id());
@@ -71,6 +68,7 @@ class UserResource extends Resource
             'index'  => ListUsers::route('/'),
             'create' => CreateUser::route('/create'),
             'edit'   => EditUser::route('/{record}/edit'),
+            'view'   => ViewUser::route('/{record}'),
         ];
     }
 }

@@ -3,308 +3,469 @@
 <head>
     <meta charset="UTF-8">
     <title>Challan - {{ $challan->challan_number }}</title>
+    @php
+        $owner        = $challan->owner;
+        $bizName      = $owner?->business_name   ?: 'GURUDEV TEXTILES';
+        $bizAddress   = $owner?->business_address ?: 'Plot No. 38, Sonal Ind. Estate-3, G.H.B. Road, Behind Chickuwadi, Near New Water Tank, SURAT.';
+        $bizMobile    = $owner?->mobile           ?: '98790 69490';
+        $bizGstin     = $owner?->gstin            ?: '24EZAPP5247K1Z3';
+
+        // Split business name into first word + rest for two-tone display
+        $nameParts    = explode(' ', trim($bizName), 2);
+        $nameFirst    = $nameParts[0];
+        $nameRest     = $nameParts[1] ?? '';
+    @endphp
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-            font-size: 13px; 
-            color: #1e293b; 
-            background: #fff; 
-            padding: 20px; 
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            color: #0f172a;
+            background: #fff;
+            padding: 5px;
         }
         .main-wrapper {
             border: 2px solid #1e3a8a;
             width: 100%;
             margin: 0 auto;
         }
-        .header { 
-            text-align: center; 
-            position: relative; 
-            padding: 20px 20px;
-            background-color: #f8fafc;
+
+        /* ── HEADER ── */
+        .header {
+            text-align: center;
+            position: relative;
+            padding: 10px 15px 10px;
+            background: #f8fafc;
             border-bottom: 2px solid #1e3a8a;
         }
-        .header-tag {
+        .challan-tag {
             background-color: #1e3a8a;
             color: #fff;
-            padding: 6px 16px;
-            border-radius: 4px;
+            padding: 3px 12px;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
             display: inline-block;
-            position: absolute;
-            left: 15px;
-            top: 15px;
             letter-spacing: 1px;
+            border-radius: 4px;
         }
-        .header-mo {
+        .mo-number {
             position: absolute;
             right: 15px;
-            top: 15px;
+            top: 10px;
             font-weight: bold;
-            font-size: 14px;
-            color: #475569;
-        }
-        .header-title {
-            font-family: "Georgia", "Times New Roman", serif;
-            font-size: 38px;
-            font-weight: bold;
-            letter-spacing: 1.5px;
-            margin-top: 15px;
+            font-size: 12px;
             color: #1e3a8a;
         }
-        .header-subtitle-wrapper { margin-top: 10px; }
-        .header-subtitle {
-            background-color: #1e3a8a;
-            color: #fff;
-            padding: 5px 20px;
-            border-radius: 20px;
-            font-size: 13px;
+        .mfg-box {
+            position: absolute;
+            right: 15px;
+            top: 28px;
+            border: 2px solid #1e3a8a;
+            color: #dc2626;
+            padding: 4px 10px;
+            font-size: 10px;
             font-weight: bold;
-            display: inline-block;
+            text-align: center;
+            border-radius: 6px;
+            line-height: 1.3;
+            background: #fff;
+        }
+        .mfg-box span { display: block; font-size: 11px; color: #1e3a8a; }
+        .brand-title { margin-top: 4px; margin-bottom: 2px; }
+        .brand-gurudev {
+            font-family: "Georgia", serif;
+            font-size: 36px;
+            color: #dc2626;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .brand-textiles {
+            font-family: "Georgia", serif;
+            font-size: 24px;
+            color: #1e3a8a;
+            font-weight: bold;
+            margin-left: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* ── ADDRESS BAR ── */
+        .address-bar {
+            text-align: center;
+            font-size: 11px;
+            color: #1e3a8a;
+            background: #f1f5f9;
+            border-bottom: 2px solid #1e3a8a;
+            padding: 5px 10px;
+            font-weight: bold;
+        }
+
+        /* ── INFO PANEL ── */
+        table { border-collapse: collapse; width: 100%; }
+
+        .info-table td {
+            border: 1px solid #1e3a8a;
+            padding: 5px 10px;
+            vertical-align: top;
+            font-size: 11px;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+        .info-table td:first-child { border-left: none; }
+        .info-table td:last-child  { border-right: none; }
+        .info-table td span.val {
+            font-weight: normal;
+            color: #0f172a;
+            font-size: 13px;
+            margin-left: 5px;
+        }
+        .info-table td span.val-large {
+            font-weight: bold;
+            color: #1e3a8a;
+            font-size: 16px;
+            text-transform: uppercase;
+            margin-left: 5px;
+        }
+        .info-table td span.val-highlight {
+            font-weight: bold;
+            color: #ea580c;
+            font-size: 17px;
+            margin-left: 6px;
+        }
+
+        /* ── GRID TABLE ── */
+        .grid-wrap { width: 100%; border-collapse: collapse; }
+
+        .grid-section { width: 69%; vertical-align: top; }
+        .summary-section { width: 31%; vertical-align: top; border-left: 2px solid #1e3a8a; }
+
+        .grid-table { width: 100%; border-collapse: collapse; }
+        .grid-table th {
+            background: #1e3a8a;
+            color: #fff;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 6px 4px;
+            border-right: 1px solid #3b5ba3;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .header-address {
-            font-size: 13px;
-            margin-top: 15px;
-            color: #475569;
-        }
-        
-        .info-panel { width: 100%; border-collapse: collapse; border-bottom: 2px solid #1e3a8a; }
-        .info-left-panel { width: 65%; border-right: 2px solid #1e3a8a; vertical-align: top; background: #fff; }
-        .info-right-panel { width: 35%; vertical-align: top; background: #f8fafc; }
-        
-        .info-label { font-size: 11px; color: #64748b; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 5px; }
-        .info-val-large { font-size: 20px; font-weight: bold; color: #0f172a; text-transform: uppercase; display: block; }
-        .info-val-normal { font-size: 15px; font-weight: bold; color: #1e293b; display: block; line-height: 1.4; }
-        .info-val-highlight { font-size: 22px; font-weight: bold; color: #ea580c; display: block; white-space: nowrap; }
-        
-        .right-info-table { width: 100%; border-collapse: collapse; }
-        .right-info-cell { padding: 16px 20px; border-bottom: 1px solid #cbd5e1; }
-        .right-info-cell:last-child { border-bottom: none; }
-        
-        .grid-container { width: 100%; border-collapse: collapse; }
-        
-        .summary-wrapper {
-            padding: 20px;
-        }
-        
-        .totals-box {
-            background: #fff;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            background-color: #f8fafc;
-        }
-        .totals-row { margin-bottom: 18px; }
-        .totals-row:last-child { margin-bottom: 0; }
-        .totals-label { font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; }
-        .totals-value { font-size: 26px; font-weight: bold; color: #1e3a8a; text-align: right; border-bottom: 2px solid #cbd5e1; padding-bottom: 4px; min-height: 38px; }
-        
-        .guarantee-note {
+        .grid-table th:last-child { border-right: none; }
+        .grid-table td {
             text-align: center;
-            font-size: 13px;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            height: 28px;
+            font-size: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #0f172a;
+        }
+        .grid-table td.row-num {
+            background: #f1f5f9;
             font-weight: bold;
+            color: #475569;
+            font-size: 11px;
+            font-family: inherit;
+            border-right: 2px solid #cbd5e1;
+            width: 7%;
+        }
+        .grid-table tr:nth-child(even) td { background: #fafbff; }
+        .grid-table tr:nth-child(even) td.row-num { background: #eef2f9; }
+        .grid-table .total-row td {
+            background: #1e3a8a !important;
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            height: 36px;
+            border-right: 1px solid #3b5ba3;
+            border-bottom: none;
+        }
+        .grid-table .total-row td.row-lbl {
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            font-family: inherit;
+        }
+
+        /* ── SUMMARY PANEL ── */
+        .summary-inner { padding: 16px 14px; }
+
+        .totals-box {
+            border: 2px solid #1e3a8a;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+        .totals-box-header {
+            background: #1e3a8a;
+            color: #fff;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 5px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .totals-box-body { padding: 10px 12px; background: #f8fafc; }
+        .totals-row { margin-bottom: 12px; }
+        .totals-row:last-child { margin-bottom: 0; }
+        .totals-label {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+        .totals-value {
+            font-size: 26px;
+            font-weight: bold;
+            color: #1e3a8a;
+            text-align: right;
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 3px;
+            line-height: 1.1;
+            min-height: 34px;
+        }
+
+        .no-dyeing {
+            text-align: center;
             color: #ef4444;
-            padding: 12px;
+            font-weight: bold;
+            font-size: 13px;
+            padding: 10px 8px;
             border: 1px dashed #ef4444;
             border-radius: 6px;
             background: #fef2f2;
-            margin-top: 40px;
             letter-spacing: 0.5px;
+            line-height: 1.4;
         }
-        
-        .footer-note {
-            margin-top: 25px;
-            display: table;
-            width: 100%;
-            font-size: 13px;
+
+        /* ── FOOTER ── */
+        .footer-bar {
+            background: #f8fafc;
+            border-top: 2px solid #1e3a8a;
+        }
+        .footer-table { width: 100%; border-collapse: collapse; }
+        .footer-table td {
+            padding: 10px 15px;
+            vertical-align: bottom;
+            border: none;
+        }
+        .footer-left  { width: 50%; border-right: 1px solid #cbd5e1; }
+        .footer-right { width: 50%; text-align: right; }
+
+        .nb-text {
+            font-size: 10px;
             color: #475569;
+            line-height: 1.5;
+            margin-bottom: 8px;
         }
-        .footer-note-left { display: table-cell; width: 50%; vertical-align: bottom; padding-right: 20px; line-height: 1.5; }
-        .footer-note-right { display: table-cell; width: 50%; vertical-align: bottom; text-align: right; }
-        
-        .signature-line {
-            margin-top: 50px;
-            border-top: 1px solid #94a3b8;
-            width: 200px;
+        .nb-text strong { color: #1e3a8a; }
+
+        .sign-line {
             display: inline-block;
-            padding-top: 8px;
-            font-weight: bold;
-            color: #1e293b;
-            text-align: center;
-        }
-        .signature-line-left {
-            margin-top: 50px;
             border-top: 1px solid #94a3b8;
-            width: 200px;
-            display: block;
-            padding-top: 8px;
+            padding-top: 6px;
+            font-size: 11px;
             font-weight: bold;
-            color: #1e293b;
+            color: #1e3a8a;
+            min-width: 160px;
             text-align: center;
+            margin-top: 30px;
+        }
+
+        .recv-note {
+            font-size: 10px;
+            color: #475569;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .auth-title {
+            font-weight: bold;
+            color: #dc2626;
+            font-size: 13px;
+            letter-spacing: 0.5px;
         }
     </style>
 </head>
 <body>
+<div class="main-wrapper">
 
-    <div class="main-wrapper">
-        <div class="header">
-            <span class="header-tag">Delivery Challan</span>
-            <span class="header-mo">Mo.: 98790 69490</span>
-            
-            <div class="header-title">GURUDEV TEXTILES</div>
-            
-            <div class="header-subtitle-wrapper">
-                <span class="header-subtitle">Manufacturer &amp; Dealers in : ART SILK CLOTH</span>
-            </div>
-            
-            <div class="header-address">
-                Plot No. 38, Sonal Ind. Estate-3, G.H.B. Road, Behind Chickuwadi, Near New Water Tank, SURAT.
-            </div>
+    {{-- ═══ HEADER ═══ --}}
+    <div class="header">
+        <div class="challan-tag">Delivery Challan</div>
+        <div class="mo-number">Mo.: {{ $bizMobile }}</div>
+
+        <div class="mfg-box">
+            Manufacturer &amp; Dealers in :<br>
+            <span>ART SILK CLOTH</span>
         </div>
-        
-        <table class="info-panel">
-            <tr>
-                <td class="info-left-panel" style="padding: 20px;">
-                    <div style="margin-bottom: 20px;">
-                        <span class="info-label">Customer Name</span>
-                        <span class="info-val-large">{{ $challan->customer?->name ?: 'N/A' }}</span>
-                    </div>
-                    
-                    <table style="width: 100%; border-collapse: collapse;">
+
+        <div class="brand-title">
+            <span class="brand-gurudev">{{ $nameFirst }}</span>
+            @if($nameRest)
+            <span class="brand-textiles">{{ $nameRest }}</span>
+            @endif
+        </div>
+    </div>
+
+    {{-- ═══ ADDRESS BAR ═══ --}}
+    <div class="address-bar">
+        {{ $bizAddress }}
+    </div>
+
+    {{-- ═══ INFO PANEL ═══ --}}
+    <table class="info-table" style="border-top: none; border-bottom: 2px solid #1e3a8a;">
+        <tr>
+            <td style="width: 65%; border-top: none; padding: 5px 10px; background: #f8fafc;">
+                <span style="color:#64748b;">GSTIN No.:</span>
+                <span style="color:#dc2626; font-family:'Courier New',monospace; font-size:15px; margin-left:5px; font-weight:bold;">{{ $bizGstin }}</span>
+            </td>
+            <td style="width: 35%; border-top: none; padding: 5px 10px; background: #f8fafc;">
+                <span style="color:#64748b;">Quality / Product :</span>
+                <span class="val" style="font-weight:bold; color:#1e3a8a; font-size:14px;">{{ $challan->product?->name ?: 'N/A' }}</span>
+            </td>
+        </tr>
+    </table>
+
+    <table class="info-table" style="border-top: none; border-bottom: 2px solid #1e3a8a;">
+        <tr>
+            <td rowspan="4" style="width: 65%; padding: 0; background: #fff; border-top: none;">
+                <div style="padding: 6px 10px; border-bottom: 1px solid #cbd5e1;">
+                    <span style="color:#64748b;">Name :</span>
+                    <span class="val-large">{{ $challan->customer?->name ?: 'N/A' }}</span>
+                </div>
+                <div style="padding: 6px 10px; border-bottom: 1px solid #cbd5e1; min-height: 38px;">
+                    <span style="color:#64748b;">Address :</span>
+                    <span class="val" style="font-size:12px; text-transform:uppercase;">{{ $challan->customer?->address ?: 'N/A' }}</span>
+                </div>
+                <div style="padding: 6px 10px; border-bottom: 1px solid #cbd5e1;">
+                    <span style="color:#64748b;">GSTIN :</span>
+                    <span class="val" style="font-size:14px; font-weight:bold; letter-spacing:1px;">{{ $challan->customer?->GSTIN ?: '—' }}</span>
+                </div>
+                <div style="padding: 6px 10px;">
+                    <span style="color:#64748b;">Mobile :</span>
+                    <span class="val" style="font-size:14px; font-weight:bold;">{{ $challan->customer?->mobile_number ?: '—' }}</span>
+                </div>
+            </td>
+            <td style="width: 35%; padding: 6px 10px; border-bottom: 1px solid #cbd5e1; border-top: none; background:#fff;">
+                <span style="color:#64748b;">Challan No.</span>
+                <span class="val-highlight">#{{ $challan->challan_number }}</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 6px 10px; border-bottom: 1px solid #cbd5e1; background:#fff;">
+                <span style="color:#64748b;">Date :</span>
+                <span class="val" style="font-size:14px; font-weight:bold;">{{ \Carbon\Carbon::parse($challan->date)->format('d M, Y') }}</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 6px 10px; border-bottom: 1px solid #cbd5e1; background:#fff;">
+                <span style="color:#64748b;">Broker :</span>
+                <span class="val" style="font-size:14px; font-weight:bold;">{{ $challan->broker ?: '—' }}</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 6px 10px; background:#f8fafc;">
+                <span style="color:#64748b;">Total Pieces :</span>
+                <span class="val" style="font-size:16px; font-weight:bold; color:#1e3a8a;">{{ $challan->total_pieces > 0 ? $challan->total_pieces : '—' }}</span>
+            </td>
+        </tr>
+    </table>
+
+    {{-- ═══ GRID + SUMMARY ═══ --}}
+    @php
+        $grid = [];
+        foreach ($challan->items as $item) {
+            $grid[$item->row_no][$item->column_no] = $item->meters;
+        }
+        $colTotals = array_fill(1, 6, 0);
+        foreach ($grid as $r => $cols) {
+            foreach ($cols as $c => $val) {
+                if (isset($colTotals[$c])) $colTotals[$c] += floatval($val);
+            }
+        }
+    @endphp
+
+    <table class="grid-wrap">
+        <tr>
+            {{-- Left: measurement grid --}}
+            <td class="grid-section">
+                <table class="grid-table">
+                    <thead>
                         <tr>
-                            <td style="width: 50%; vertical-align: top; padding-right: 15px; border-right: 1px solid #e2e8f0;">
-                                <span class="info-label">Address</span>
-                                <span class="info-val-normal" style="color: #475569;">{{ $challan->customer?->address ?: 'N/A' }}</span>
-                            </td>
-                            <td style="width: 50%; vertical-align: top; padding-left: 15px;">
-                                <span class="info-label">Contact Details</span>
-                                @if($challan->customer?->GSTIN)
-                                <div style="margin-bottom: 6px;"><strong style="color:#64748b; font-size:12px;">GSTIN:</strong> <span style="font-size:14px; font-weight: bold; color: #0f172a;">{{ $challan->customer?->GSTIN }}</span></div>
-                                @endif
-                                @if($challan->customer?->mobile_number)
-                                <div><strong style="color:#64748b; font-size:12px;">Mo:</strong> <span style="font-size:14px; font-weight: bold; color: #0f172a;">{{ $challan->customer?->mobile_number }}</span></div>
-                                @endif
-                                @if(!$challan->customer?->GSTIN && !$challan->customer?->mobile_number)
-                                <span style="font-size:14px; color:#94a3b8; font-weight:bold;">N/A</span>
-                                @endif
-                            </td>
+                            <th style="width:7%;">No.</th>
+                            @for($c = 1; $c <= 6; $c++)
+                            <th style="width:15.5%;">Thaan {{ $c }}</th>
+                            @endfor
                         </tr>
-                    </table>
-                    
-                    <div style="margin-top: 20px; border-top: 1px dashed #cbd5e1; padding-top: 15px;">
-                        <span class="info-label">Quality / Product</span>
-                        <span class="info-val-normal" style="color: #1e3a8a; font-size: 18px;">{{ $challan->product?->name ?: 'N/A' }}</span>
-                    </div>
-                </td>
-                
-                <td class="info-right-panel" style="padding: 0;">
-                    <table class="right-info-table">
+                    </thead>
+                    <tbody>
+                        @for($r = 1; $r <= 12; $r++)
                         <tr>
-                            <td class="right-info-cell" style="padding-top: 20px;">
-                                <span class="info-label">Challan No.</span>
-                                <span class="info-val-highlight">#{{ $challan->challan_number }}</span>
-                            </td>
+                            <td class="row-num">{{ $r }}</td>
+                            @for($c = 1; $c <= 6; $c++)
+                                @php $val = $grid[$r][$c] ?? 0; @endphp
+                                <td>{{ floatval($val) > 0 ? number_format(floatval($val), 2) : '' }}</td>
+                            @endfor
                         </tr>
-                        <tr>
-                            <td class="right-info-cell">
-                                <span class="info-label">Date</span>
-                                <span class="info-val-normal" style="font-size: 17px;">{{ \Carbon\Carbon::parse($challan->date)->format('d M, Y') }}</span>
-                            </td>
+                        @endfor
+                        <tr class="total-row">
+                            <td class="row-lbl">TOTAL</td>
+                            @for($c = 1; $c <= 6; $c++)
+                            <td>{{ $colTotals[$c] > 0 ? number_format($colTotals[$c], 2) : '' }}</td>
+                            @endfor
                         </tr>
-                        <tr>
-                            <td class="right-info-cell">
-                                <span class="info-label">Broker Name</span>
-                                <span class="info-val-normal" style="font-size: 16px;">{{ $challan->broker ?: 'N/A' }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="right-info-cell" style="background-color: #f1f5f9; padding-bottom: 20px;">
-                                <span class="info-label">Our GSTIN No.</span>
-                                <span class="info-val-normal" style="color: #1e3a8a; font-family: monospace; font-size: 16px; letter-spacing: 1px;">24EZAPP5247K1Z3</span>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-        
-        <table class="grid-container">
-            @php
-                $grid = [];
-                foreach($challan->items as $item) {
-                    $grid[$item->row_no][$item->column_no] = $item->meters;
-                }
-                $colTotals = array_fill(1, 6, 0);
-            @endphp
-            @for($r = 1; $r <= 12; $r++)
-            <tr>
-                <td style="width: 6%; text-align: center; border-right: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold; color: #64748b; height: 32px;">{{ $r }}</td>
-                @for($c = 1; $c <= 6; $c++)
-                    @php
-                        $val = $grid[$r][$c] ?? 0;
-                        $colTotals[$c] += floatval($val);
-                    @endphp
-                <td style="width: 10.5%; text-align: center; border-right: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1;">
-                    <span class="val-text" style="font-family: 'Courier New', Courier, monospace;">{{ floatval($val) > 0 ? number_format(floatval($val), 2) : '' }}</span>
-                </td>
-                @endfor
-                
-                @if($r == 1)
-                <!-- Right column summary pane -->
-                <td rowspan="12" style="width: 31%; vertical-align: top; border-bottom: 1px solid #cbd5e1; border-left: 2px solid #1e3a8a;">
-                    <div class="summary-wrapper">
-                        <div class="totals-box">
+                    </tbody>
+                </table>
+            </td>
+
+            {{-- Right: summary panel --}}
+            <td class="summary-section">
+                <div class="summary-inner">
+                    <div class="totals-box">
+                        <div class="totals-box-header">Summary</div>
+                        <div class="totals-box-body">
                             <div class="totals-row">
                                 <div class="totals-label">Total Pieces</div>
-                                <div class="totals-value">
-                                    {{ $challan->total_pieces > 0 ? $challan->total_pieces : '' }}
-                                </div>
+                                <div class="totals-value">{{ $challan->total_pieces > 0 ? $challan->total_pieces : '' }}</div>
                             </div>
                             <div class="totals-row">
                                 <div class="totals-label">Total Meters</div>
-                                <div class="totals-value">
-                                    {{ $challan->total_meters > 0 ? number_format($challan->total_meters, 2) : '' }}
-                                </div>
+                                <div class="totals-value">{{ $challan->total_meters > 0 ? number_format($challan->total_meters, 2) : '' }}</div>
                             </div>
                         </div>
-                        
-                        <div class="guarantee-note">
-                            * NO DYEING GUARANTEE *
-                        </div>
                     </div>
+
+                    <div class="no-dyeing">
+                        &#9733; NO DYEING GUARANTEE &#9733;
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    {{-- ═══ FOOTER ═══ --}}
+    <div class="footer-bar">
+        <table class="footer-table">
+            <tr>
+                <td class="footer-left">
+                    <div class="nb-text">
+                        <strong>N.B. :</strong> Report to be presented within 24 hours.<br>
+                        After that, it will not be entertained.
+                    </div>
+                    <div class="sign-line">Prepared By</div>
                 </td>
-                @endif
-            </tr>
-            @endfor
-            
-            <tr class="total-row">
-                <td style="font-size: 11px; color: #1e3a8a; text-align: center; font-weight: bold; border-right: 1px solid #cbd5e1; height: 42px; background: #f1f5f9; letter-spacing: 0.5px;">TOTAL</td>
-                @for($c = 1; $c <= 6; $c++)
-                <td style="text-align: center; border-right: 1px solid #cbd5e1; background: #f1f5f9;">
-                    <span class="val-text" style="color: #1e3a8a; font-family: 'Courier New', Courier, monospace;">{{ $colTotals[$c] > 0 ? number_format($colTotals[$c], 2) : '' }}</span>
-                </td>
-                @endfor
-                <td style="background-color: #1e3a8a; color: #fff; text-align: center; padding: 4px 12px; font-weight: bold; font-size: 16px; letter-spacing: 1.5px; text-transform: uppercase;">
-                    Total Summary
+                <td class="footer-right">
+                    <div class="recv-note">Received the above goods in good and sound condition.</div>
+                    <div class="auth-title">FOR, {{ strtoupper($bizName) }}</div>
+                    <div class="sign-line">Receiver's Signature</div>
                 </td>
             </tr>
         </table>
     </div>
 
-    <div class="footer-note">
-        <div class="footer-note-left">
-            <p><strong>N.B. :</strong> Report to be Presented within 24 Hours. <br>After that, it will not be entertained.</p>
-            <div class="signature-line-left">Prepared By</div>
-        </div>
-        <div class="footer-note-right">
-            <p style="font-weight: bold;">Received the above goods in good and sound condition.</p>
-            <div class="signature-line">Receiver's Signature</div>
-        </div>
-    </div>
-
+</div>
 </body>
 </html>
