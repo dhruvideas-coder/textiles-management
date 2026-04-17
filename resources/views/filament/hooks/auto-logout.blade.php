@@ -168,6 +168,9 @@ html.dark .al-button {
 
 <script>
 (function() {
+    if (window.__autoLogoutRunning) return;
+    window.__autoLogoutRunning = true;
+
     let idleTime = 0;
     let countdown = 30;
     const idleLimit = 300; // 5 minutes
@@ -187,6 +190,7 @@ html.dark .al-button {
         
         if (isWarningShown) {
             isWarningShown = false;
+            countdownEl.innerText = countdownLimit;
             overlay.classList.remove('show');
             setTimeout(() => {
                 if(!isWarningShown) overlay.style.display = 'none';
@@ -196,7 +200,8 @@ html.dark .al-button {
 
     function handleActivity(e) {
         if (isWarningShown) {
-            if (e.type === 'click' || e.type === 'touchstart' || e.type === 'keydown') {
+            // Only dismiss if interacting outside the overlay (not backdrop clicks)
+            if ((e.type === 'keydown') && !overlay.contains(e.target)) {
                 resetTimer(true);
             }
             return;
@@ -239,15 +244,16 @@ html.dark .al-button {
         let form = document.createElement('form');
         form.method = 'POST';
         form.action = '{{ filament()->getLogoutUrl() }}';
-        
-        let metaToken = document.querySelector('meta[name="csrf-token"]');
-        if (metaToken) {
-            let input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = '_token';
-            input.value = metaToken.getAttribute('content');
-            form.appendChild(input);
-        }
+
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = '_token';
+        // Use Livewire/Filament's csrf token, fallback to meta tag
+        input.value = window.livewire_token
+            || (document.querySelector('meta[name="csrf-token"]') || {}).content
+            || '{{ csrf_token() }}';
+        form.appendChild(input);
+
         document.body.appendChild(form);
         form.submit();
     }
