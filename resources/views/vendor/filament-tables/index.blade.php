@@ -477,21 +477,8 @@
                     </div>
 
                     @if ($isGlobalSearchVisible || $hasFiltersTrigger || $hasColumnManager)
-                        <div class="fi-ta-search-container flex flex-wrap items-center gap-x-4">
+                        <div class="fi-ta-search-container flex flex-wrap items-center justify-between gap-2 w-full sm:w-auto sm:justify-end">
                             {{ FilamentView::renderHook(TablesRenderHook::TOOLBAR_SEARCH_BEFORE, scopes: static::class) }}
-
-                            @if ($isGlobalSearchVisible)
-                                @php
-                                    $searchPlaceholder = $getSearchPlaceholder();
-                                @endphp
-
-                                <x-filament-tables::search-field
-                                    :debounce="$searchDebounce"
-                                    :on-blur="$isSearchOnBlur"
-                                    :placeholder="$searchPlaceholder"
-                                    class="fi-ta-search-field grow sm:grow-0"
-                                />
-                            @endif
 
                             @php
                                 $paginationPageOptions = $getPaginationPageOptions();
@@ -511,6 +498,19 @@
                                         </x-filament::input.select>
                                     </x-filament::input.wrapper>
                                 </div>
+                            @endif
+
+                            @if ($isGlobalSearchVisible)
+                                @php
+                                    $searchPlaceholder = $getSearchPlaceholder();
+                                @endphp
+
+                                <x-filament-tables::search-field
+                                    :debounce="$searchDebounce"
+                                    :on-blur="$isSearchOnBlur"
+                                    :placeholder="$searchPlaceholder"
+                                    class="fi-ta-search-field grow sm:grow-0"
+                                />
                             @endif
 
                             {{ FilamentView::renderHook(TablesRenderHook::TOOLBAR_SEARCH_AFTER, scopes: static::class) }}

@@ -20,7 +20,7 @@
 }
 
 .fi-ta-pagination-ctn .fi-pagination-items {
-    @apply flex flex-wrap justify-center gap-1.5 !important;
+    @apply !flex !flex-wrap !justify-center gap-1.5;
 }
 
 .fi-ta-pagination-ctn .fi-pagination-item {
@@ -30,7 +30,7 @@
 /* Better touch targets for pagination buttons */
 .fi-pagination-previous-btn,
 .fi-pagination-next-btn {
-    @apply px-4 py-2 rounded-xl !important;
+    @apply !px-4 !py-2 !rounded-xl;
 }
 
 /* Top Per Page Field Styling */
@@ -44,14 +44,60 @@
 
 @media (max-width: 640px) {
     .fi-ta-search-container {
-        @apply flex-col items-stretch gap-y-3;
+        @apply !flex !flex-row !flex-nowrap !items-center !justify-between !w-full !gap-2;
     }
     
     .fi-ta-top-records-per-page {
-        @apply w-full;
+        @apply !w-auto !flex-shrink-0;
     }
 
     .fi-ta-search-field {
-        @apply w-full;
+        @apply !flex-1 !w-full min-w-[100px];
     }
 }
+
+/* Force Header Title and Action Buttons in one row on Mobile & Tablet */
+@media (max-width: 1024px) {
+    .fi-header {
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 1rem !important;
+    }
+
+    .fi-header > div:first-child {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+        padding-right: 0.5rem !important;
+    }
+
+    .fi-header-heading {
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        font-size: 1.25rem !important;
+    }
+    
+    @media (min-width: 640px) {
+        .fi-header-heading {
+            font-size: 1.5rem !important;
+        }
+    }
+
+    .fi-header-actions {
+        flex-shrink: 0 !important;
+        margin-top: 0 !important;
+    }
+    
+    .fi-header-actions > .fi-ac {
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        padding-bottom: 0.25rem !important;
+        margin-bottom: -0.25rem !important;
+    }
+    
+    .fi-header-actions > .fi-ac::-webkit-scrollbar {
+        display: none;
+    }
+}
+

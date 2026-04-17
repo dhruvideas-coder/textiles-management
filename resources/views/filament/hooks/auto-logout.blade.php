@@ -1,5 +1,53 @@
 @auth
 <style>
+/* Force Header Title and Action Buttons in one row on Mobile & Tablet */
+@media (max-width: 1024px) {
+    header.fi-header {
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 1rem !important;
+    }
+
+    header.fi-header > div:first-child {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+        padding-right: 0.5rem !important;
+    }
+
+    header.fi-header .fi-header-heading {
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        font-size: 1.25rem !important;
+    }
+    
+    @media (min-width: 640px) {
+        header.fi-header .fi-header-heading {
+            font-size: 1.5rem !important;
+        }
+    }
+
+    header.fi-header .fi-header-actions {
+        flex-shrink: 0 !important;
+        margin-top: 0 !important;
+    }
+    
+    header.fi-header .fi-header-actions > .fi-ac {
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        padding-bottom: 0.25rem !important;
+        margin-bottom: -0.25rem !important;
+        /* Hide scrollbar for clean UI */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    header.fi-header .fi-header-actions > .fi-ac::-webkit-scrollbar {
+        display: none;
+    }
+}
+
 /* Advanced Premium Popup CSS */
 #auto-logout-overlay {
     position: fixed;
