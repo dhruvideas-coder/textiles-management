@@ -24,7 +24,7 @@ class ProductResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static ?string $navigationLabel = 'Quality Master';
+    protected static ?string $navigationLabel = 'Products';
 
     public static function shouldRegisterNavigation(): bool
     {

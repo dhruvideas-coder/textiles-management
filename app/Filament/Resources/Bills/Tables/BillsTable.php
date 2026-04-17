@@ -23,8 +23,7 @@ class BillsTable
                 TextColumn::make('challan.challan_number')
                     ->label('Challan No.')
                     ->searchable()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 TextColumn::make('challan.customer.name')
                     ->label('Party')
                     ->searchable()
@@ -32,13 +31,11 @@ class BillsTable
                 TextColumn::make('total_meters')
                     ->label('Meters')
                     ->numeric()
-                    ->sortable()
-                    ->toggleable(),
+                    ->sortable(),
                 TextColumn::make('rate')
                     ->label('Rate')
                     ->money('INR')
-                    ->sortable()
-                    ->toggleable(),
+                    ->sortable(),
                 TextColumn::make('final_total')
                     ->label('Total (₹)')
                     ->money('INR')
@@ -46,8 +43,7 @@ class BillsTable
                     ->weight('bold'),
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([
                 //

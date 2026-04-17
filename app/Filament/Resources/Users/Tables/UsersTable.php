@@ -20,8 +20,7 @@ class UsersTable
                     ->sortable(),
                 TextColumn::make('email')
                     ->label('Email')
-                    ->searchable()
-                    ->hiddenFrom('md'),
+                    ->searchable(),
                 TextColumn::make('role')
                     ->badge()
                     ->color(fn ($state) => match ($state) {
@@ -33,17 +32,10 @@ class UsersTable
                     ->label('Owner')
                     ->sortable()
                     ->placeholder('—')
-                    ->hidden(fn () => auth()->user()->role === 'owner')
-                    ->toggleable(),
-                TextColumn::make('provider')
-                    ->badge()
-                    ->color('info')
-                    ->placeholder('—')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->hidden(fn () => auth()->user()->role === 'owner'),
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([
                 //

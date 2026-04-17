@@ -18,19 +18,12 @@ class CustomersTable
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('GSTIN')
-                    ->searchable()
-                    ->toggleable(),
+                    ->searchable(),
                 TextColumn::make('mobile_number')
-                    ->searchable()
-                    ->toggleable(),
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([
                 //

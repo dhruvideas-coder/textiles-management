@@ -28,15 +28,12 @@ class ChallansTable
                 TextColumn::make('product.name')
                     ->label('Quality')
                     ->searchable()
-                    ->sortable()
-                    ->toggleable(),
+                    ->sortable(),
                 TextColumn::make('broker')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->searchable(),
                 TextColumn::make('date')
                     ->date()
-                    ->sortable()
-                    ->toggleable(),
+                    ->sortable(),
                 TextColumn::make('status')
                     ->badge(),
                 TextColumn::make('total_pieces')
@@ -49,10 +46,6 @@ class ChallansTable
                     ->numeric()
                     ->sortable()
                     ->weight('bold'),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

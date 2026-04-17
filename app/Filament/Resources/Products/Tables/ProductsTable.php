@@ -20,17 +20,9 @@ class ProductsTable
                 TextColumn::make('default_rate')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('last_used_rate')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([
                 //
