@@ -40,7 +40,7 @@
             <div style="width: 100%; border-top: 1px solid #e5e7eb;"></div>
         </div>
         <div style="position: relative; display: flex; justify-content: center;">
-            <span style="background: white; padding: 0 12px; font-size: 12px; color: #9ca3af; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;">or sign in with email</span>
+            <span style="background: white; padding: 0 10px; font-size: 11px; color: #94a3b8; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;">or continue with email</span>
         </div>
     </div>
 </div>

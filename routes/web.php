@@ -5,7 +5,7 @@ use App\Http\Controllers\PdfController;
 use App\Http\Controllers\AuthController;
 
 Route::get('/login/google', [AuthController::class, 'redirectToGoogle'])->name('login.google');
-Route::get('/login/google/callback', [AuthController::class, 'handleGoogleCallback']);
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/pdf/challan/{id}', [PdfController::class, 'challan'])->name('pdf.challan');
