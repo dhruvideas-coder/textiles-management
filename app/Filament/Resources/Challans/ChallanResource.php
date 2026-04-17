@@ -48,6 +48,11 @@ class ChallanResource extends Resource
         return [];
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['customer', 'product', 'bill']);
+    }
+
     public static function getPages(): array
     {
         return [

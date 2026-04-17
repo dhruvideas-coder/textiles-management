@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -28,7 +29,8 @@ class UserForm
                     ->maxLength(191),
                 Select::make('role')
                     ->options(function () {
-                        if (auth()->user()->role === 'admin') {
+                        $role = Filament::auth()->user()?->role;
+                        if ($role === 'admin') {
                             return [
                                 'admin' => 'Admin (Super)',
                                 'owner' => 'Owner',
@@ -39,7 +41,10 @@ class UserForm
                             'staff' => 'Staff',
                         ];
                     })
-                    ->default(fn () => auth()->user()->role === 'owner' ? 'staff' : 'owner')
+                    ->default(function () {
+                        $role = Filament::auth()->user()?->role;
+                        return $role === 'owner' ? 'staff' : 'owner';
+                    })
                     ->required()
                     ->native(false)
                     ->reactive(),
@@ -48,9 +53,9 @@ class UserForm
                     ->options(User::where('role', 'owner')->pluck('name', 'id'))
                     ->nullable()
                     ->searchable()
-                    ->hidden(fn ($get) => $get('role') !== 'staff' || auth()->user()->role === 'owner')
-                    ->dehydrated(fn ($state) => auth()->user()->role !== 'owner' || $state) // Ensure it's not removed if admin is editing
-                    ->default(fn () => auth()->user()->role === 'owner' ? auth()->id() : null),
+                    ->hidden(fn ($get) => $get('role') !== 'staff' || Filament::auth()->user()?->role === 'owner')
+                    ->dehydrated(fn ($state) => Filament::auth()->user()?->role !== 'owner' || $state)
+                    ->default(fn () => Filament::auth()->user()?->role === 'owner' ? Filament::auth()->id() : null),
                 TextInput::make('password')
                     ->password()
                     ->required(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord)

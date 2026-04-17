@@ -26,11 +26,7 @@ class ChallanGrid extends Component
         $this->calculateTotals();
     }
 
-    public function updatedGrid()
-    {
-        $this->calculateTotals();
-    }
-
+    // We manualy call this from Alpine to sync data
     public function calculateTotals()
     {
         $this->total_meters = 0;

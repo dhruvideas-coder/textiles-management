@@ -25,20 +25,32 @@ class EditChallan extends EditRecord
     {
         $challanId = $this->record->id;
 
-        // Clear missing or all old items and reconstruct to ensure data consistency
+        // Clear old items and reconstruct to ensure data consistency
         ChallanItem::where('challan_id', $challanId)->delete();
 
+        $items = [];
         foreach ($this->gridData as $row => $cols) {
             foreach ($cols as $col => $meters) {
                 if (floatval($meters) > 0) {
-                    ChallanItem::create([
+                    $items[] = [
                         'challan_id' => $challanId,
-                        'row_no' => $row,
-                        'column_no' => $col,
-                        'meters' => floatval($meters),
-                    ]);
+                        'row_no'     => $row,
+                        'column_no'  => $col,
+                        'meters'     => floatval($meters),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
                 }
             }
         }
+
+        if (count($items) > 0) {
+            ChallanItem::insert($items);
+        }
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

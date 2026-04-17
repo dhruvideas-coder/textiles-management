@@ -33,11 +33,13 @@ class CustomerForm
                 TextInput::make('mobile_number')
                     ->label('Mobile Number')
                     ->tel()
-                    ->maxLength(15),
+                    ->maxLength(10)
+                    ->minLength(10),
 
                 TextInput::make('GSTIN')
                     ->label('GSTIN')
                     ->maxLength(15)
+                    ->minLength(15)
                     ->placeholder('24AAAAA0000A1Z5'),
 
                 Textarea::make('address')

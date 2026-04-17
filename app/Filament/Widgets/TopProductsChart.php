@@ -16,7 +16,7 @@ class TopProductsChart extends ChartWidget
 
     protected function getData(): array
     {
-        $products = DB::table('challans')
+        $products = \App\Models\Challan::query()
             ->join('products', 'challans.product_id', '=', 'products.id')
             ->select('products.name', DB::raw('SUM(challans.total_meters) as total'))
             ->groupBy('products.id', 'products.name')

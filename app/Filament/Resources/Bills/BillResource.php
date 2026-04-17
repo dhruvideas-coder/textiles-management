@@ -48,6 +48,11 @@ class BillResource extends Resource
         return [];
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['challan.customer']);
+    }
+
     public static function getPages(): array
     {
         return [

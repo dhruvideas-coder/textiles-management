@@ -69,7 +69,7 @@ class ChallansTable
                     ->icon('heroicon-o-banknotes')
                     ->requiresConfirmation()
                     ->action(function ($record) {
-                        return redirect()->to('/admin/bills/create?challan_id=' . $record->id);
+                        return redirect()->to(\App\Filament\Resources\Bills\BillResource::getUrl('create', ['challan_id' => $record->id]));
                     })
                     ->hidden(fn ($record) => $record->bill()->exists()),
                 Action::make('download_bill_pdf')

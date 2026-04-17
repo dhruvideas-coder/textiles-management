@@ -1,4 +1,33 @@
-<div class="w-full space-y-5">
+<div class="w-full space-y-5" 
+     x-data="{ 
+        grid: @entangle('grid'),
+        totals: { pieces: 0, meters: 0, columns: [0,0,0,0,0,0,0] },
+        timeout: null,
+        calculate() {
+            let p = 0; let m = 0; let cols = [0,0,0,0,0,0,0];
+            for (let r = 1; r <= 12; r++) {
+                for (let c = 1; c <= 6; c++) {
+                    let val = parseFloat(this.grid[r][c] || 0);
+                    if (val > 0) {
+                        p++;
+                        m += val;
+                        cols[c] += val;
+                    }
+                }
+            }
+            this.totals.pieces = p;
+            this.totals.meters = m.toFixed(2);
+            this.totals.columns = cols.map(v => v.toFixed(1));
+            
+            // Sync to Livewire with a debounce to avoid lag during typing
+            clearTimeout(this.timeout);
+            this.timeout = setTimeout(() => {
+                this.$wire.set('grid', this.grid);
+                this.$wire.calculateTotals();
+            }, 1500);
+        }
+     }"
+     x-init="calculate()">
     {{-- Absolute Centering & Professional Grid Styles --}}
     <style>
         /* Modern aesthetic fixes */
@@ -51,7 +80,8 @@
                                 <td class="p-0 border-l border-gray-100 align-middle">
                                     <input type="number"
                                            step="0.01"
-                                           wire:model.live="grid.{{ $r }}.{{ $c }}"
+                                           x-model="grid[{{ $r }}][{{ $c }}]"
+                                           @input="calculate()"
                                            class="grid-input w-full border-0 bg-transparent py-4 text-center text-[12px] sm:text-sm font-bold text-slate-800 focus:ring-0 focus:outline-none placeholder-slate-200"
                                            placeholder="0">
                                 </td>
@@ -66,8 +96,8 @@
                         </td>
                         @for ($c = 1; $c <= 6; $c++)
                             <td class="py-4 text-center border-l border-gray-200">
-                                <span class="text-[11px] sm:text-xs font-black text-blue-700 block text-center">
-                                    {{ number_format($column_totals[$c] ?? 0, 1) }}
+                                <span class="text-[11px] sm:text-xs font-black text-blue-700 block text-center" 
+                                      x-text="totals.columns[{{ $c }}]">
                                 </span>
                             </td>
                         @endfor
@@ -83,7 +113,7 @@
             <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Total Pieces</span>
             <div class="flex items-center space-x-2 mt-1">
                 <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
-                <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{{ number_format($total_pieces) }}</h3>
+                <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight" x-text="totals.pieces"></h3>
             </div>
         </div>
         
@@ -91,7 +121,7 @@
             <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Total Metres</span>
             <div class="flex items-center space-x-2 mt-1">
                 <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{{ number_format($total_meters, 1) }}</h3>
+                <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight" x-text="totals.meters"></h3>
             </div>
         </div>
     </div>

@@ -26,7 +26,7 @@ class Challan extends Model
                 $ownerId = auth()->user()->role === 'owner'
                     ? auth()->id()
                     : auth()->user()->owner_id;
-                $builder->where('owner_id', $ownerId);
+                $builder->where('challans.owner_id', $ownerId);
             }
         });
 

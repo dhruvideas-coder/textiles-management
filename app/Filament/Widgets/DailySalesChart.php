@@ -18,13 +18,20 @@ class DailySalesChart extends ChartWidget
 
     protected function getData(): array
     {
-        $data = [];
-        $labels = [];
+        $startDate = Carbon::today()->subDays(6);
+        $endDate = Carbon::today();
+
+        $sales = Bill::whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()])
+            ->selectRaw('DATE(created_at) as date, SUM(amount) as total')
+            ->groupBy('date')
+            ->pluck('total', 'date')
+            ->toArray();
 
         for ($i = 6; $i >= 0; $i--) {
             $date = Carbon::today()->subDays($i);
             $labels[] = $date->format('d M');
-            $data[] = Bill::whereDate('created_at', $date)->sum('amount');
+            $dateString = $date->toDateString();
+            $data[] = $sales[$dateString] ?? 0;
         }
 
         return [

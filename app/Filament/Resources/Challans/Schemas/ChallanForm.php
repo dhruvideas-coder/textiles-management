@@ -31,14 +31,19 @@ class ChallanForm
                 ->afterStateUpdated(function (callable $set) {
                     $set('customer_id', null);
                     $set('product_id', null);
+                    
+                    // Logic to refresh challan number would go here, 
+                    // but we can also handle it in the Page class via listeners.
                 })
                 ->columnSpanFull();
         }
 
         $detailFields = array_merge($detailFields, [
             TextInput::make('challan_number')
-                ->required()
-                ->maxLength(255),
+                ->label('Challan Number')
+                ->placeholder('Auto-generated (e.g. 2026-27-0001)')
+                ->readOnly()
+                ->required(),
 
             Select::make('customer_id')
                 ->label('Party (Customer)')
