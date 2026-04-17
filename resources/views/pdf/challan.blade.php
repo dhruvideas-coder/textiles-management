@@ -3,41 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>Challan - {{ $challan->challan_number }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Arial', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; font-size: 12px; color: #111; background: #fff; padding: 20px; }
+        .header { text-align: center; padding-bottom: 10px; border-bottom: 2px solid #222; }
+        .header h1 { font-size: 24px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
+        .header p { font-size: 10px; margin-top: 3px; color: #555; }
+        .header .gstin { font-weight: bold; color: #111; }
+        .info-row { display: table; width: 100%; margin: 12px 0; border-bottom: 2px solid #222; padding-bottom: 12px; }
+        .info-left { display: table-cell; width: 50%; vertical-align: top; }
+        .info-right { display: table-cell; width: 50%; vertical-align: top; text-align: right; }
+        .info-left p, .info-right p { margin: 2px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { border: 1px solid #222; padding: 4px 6px; text-align: center; }
+        thead th { background-color: #e5e5e5; font-weight: bold; }
+        tfoot td { font-weight: bold; background-color: #f0f0f0; }
+        .totals-bar { display: table; width: 100%; margin-top: 12px; border: 2px solid #222; padding: 6px 8px; }
+        .totals-bar-left { display: table-cell; font-weight: bold; font-size: 13px; }
+        .totals-bar-right { display: table-cell; text-align: right; font-weight: bold; font-size: 13px; }
+        .footer { display: table; width: 100%; margin-top: 50px; padding: 0 10px; }
+        .footer-left { display: table-cell; vertical-align: bottom; font-size: 10px; }
+        .footer-right { display: table-cell; text-align: center; font-weight: bold; vertical-align: bottom; }
+        .sig-space { height: 50px; }
     </style>
 </head>
-<body class="bg-white text-gray-900 p-8 text-sm max-w-4xl mx-auto border-2 border-gray-800 m-4">
-    <div class="text-center pb-4 border-b-2 border-gray-800">
-        <h1 class="text-3xl font-bold uppercase tracking-wider text-gray-900">Gurudev Textiles</h1>
-        <p class="text-xs mt-1 font-semibold text-gray-600">Surat, Gujarat - 395002 | Mobile: +91 99999 99999</p>
-        <p class="text-xs font-bold mt-1">GSTIN: 24AAAAA0000A1Z5</p>
+<body>
+    <div class="header">
+        <h1>Gurudev Textiles</h1>
+        <p>Surat, Gujarat - 395002 | Mobile: +91 99999 99999</p>
+        <p class="gstin">GSTIN: 24AAAAA0000A1Z5</p>
     </div>
 
-    <div class="flex justify-between py-4 border-b-2 border-gray-800">
-        <div class="w-1/2">
-            <h2 class="font-bold text-gray-700">M/S: {{ $challan->customer?->name }}</h2>
+    <div class="info-row">
+        <div class="info-left">
+            <p><strong>M/S:</strong> {{ $challan->customer?->name }}</p>
             <p>{{ $challan->customer?->address }}</p>
             <p><strong>GSTIN:</strong> {{ $challan->customer?->GSTIN }}</p>
             <p><strong>Mobile:</strong> {{ $challan->customer?->mobile_number }}</p>
         </div>
-        <div class="w-1/2 text-right">
-            <p><span class="font-bold">Challan No:</span> {{ $challan->challan_number }}</p>
-            <p><span class="font-bold">Date:</span> {{ \Carbon\Carbon::parse($challan->date)->format('d/m/Y') }}</p>
-            <p><span class="font-bold">Quality:</span> {{ $challan->product?->name }}</p>
-            <p><span class="font-bold">Broker:</span> {{ $challan->broker }}</p>
+        <div class="info-right">
+            <p><strong>Challan No:</strong> {{ $challan->challan_number }}</p>
+            <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($challan->date)->format('d/m/Y') }}</p>
+            <p><strong>Quality:</strong> {{ $challan->product?->name }}</p>
+            <p><strong>Broker:</strong> {{ $challan->broker }}</p>
         </div>
     </div>
 
-    <div class="mt-4">
-        <h3 class="font-bold mb-2">Measurement (6x12 Grid)</h3>
-        <table class="w-full border-collapse border border-gray-800 text-center">
+    <div>
+        <p style="font-weight:bold; margin-bottom:6px;">Measurement (6x12 Grid)</p>
+        <table>
             <thead>
                 <tr>
-                    <th class="border border-gray-800 p-1">Row</th>
+                    <th>Row</th>
                     @for($c = 1; $c <= 6; $c++)
-                    <th class="border border-gray-800 p-1">Col {{ $c }}</th>
+                    <th>Col {{ $c }}</th>
                     @endfor
                 </tr>
             </thead>
@@ -51,41 +70,41 @@
                 @endphp
                 @for($r = 1; $r <= 12; $r++)
                 <tr>
-                    <td class="border border-gray-800 p-1 font-bold">{{ $r }}</td>
+                    <td style="font-weight:bold;">{{ $r }}</td>
                     @for($c = 1; $c <= 6; $c++)
                         @php
                             $val = $grid[$r][$c] ?? 0;
                             $colTotals[$c] += floatval($val);
                         @endphp
-                    <td class="border border-gray-800 p-1">{{ floatval($val) > 0 ? floatval($val) : '' }}</td>
+                    <td>{{ floatval($val) > 0 ? floatval($val) : '' }}</td>
                     @endfor
                 </tr>
                 @endfor
             </tbody>
             <tfoot>
-                <tr class="font-bold">
-                    <td class="border border-gray-800 p-1">Total</td>
+                <tr>
+                    <td>Total</td>
                     @for($c = 1; $c <= 6; $c++)
-                    <td class="border border-gray-800 p-1">{{ $colTotals[$c] > 0 ? $colTotals[$c] : '' }}</td>
+                    <td>{{ $colTotals[$c] > 0 ? $colTotals[$c] : '' }}</td>
                     @endfor
                 </tr>
             </tfoot>
         </table>
     </div>
 
-    <div class="mt-4 flex justify-between items-center text-lg font-bold border-2 border-gray-800 p-2">
-        <div>TOTAL PIECES: {{ $challan->total_pieces }}</div>
-        <div>GRAND TOTAL METERS: {{ $challan->total_meters }}</div>
+    <div class="totals-bar">
+        <div class="totals-bar-left">TOTAL PIECES: {{ $challan->total_pieces }}</div>
+        <div class="totals-bar-right">GRAND TOTAL METERS: {{ $challan->total_meters }}</div>
     </div>
 
-    <div class="flex justify-between mt-12 pr-4 pl-4 items-end">
-        <div>
-            <p class="text-xs font-semibold uppercase">* No Dyeing Guarantee *</p>
-            <p class="text-xs">Goods once sold will not be taken back.</p>
+    <div class="footer">
+        <div class="footer-left">
+            <p style="font-weight:bold; text-transform:uppercase;">* No Dyeing Guarantee *</p>
+            <p>Goods once sold will not be taken back.</p>
         </div>
-        <div class="text-center font-bold">
+        <div class="footer-right">
             <p>For Gurudev Textiles</p>
-            <div class="h-16"></div>
+            <div class="sig-space"></div>
             <p>Authorised Signatory</p>
         </div>
     </div>

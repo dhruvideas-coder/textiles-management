@@ -60,6 +60,8 @@ class ChallansTable
                 Action::make('generate_bill')
                     ->label('Generate Bill')
                     ->icon('heroicon-o-banknotes')
+                    ->button()
+                    ->color('success')
                     ->requiresConfirmation()
                     ->action(function ($record) {
                         return redirect()->to(\App\Filament\Resources\Bills\BillResource::getUrl('create', ['challan_id' => $record->id]));
