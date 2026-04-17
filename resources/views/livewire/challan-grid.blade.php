@@ -1,42 +1,31 @@
-<div class="w-full space-y-5" 
-     x-data="{ 
-        grid: @entangle('grid'),
-        totals: { pieces: 0, meters: 0, columns: [0,0,0,0,0,0,0] },
-        timeout: null,
-        calculate() {
-            let p = 0; let m = 0; let cols = [0,0,0,0,0,0,0];
-            for (let r = 1; r <= 12; r++) {
-                for (let c = 1; c <= 6; c++) {
-                    let val = parseFloat(this.grid[r][c] || 0);
-                    if (val > 0) {
-                        p++;
-                        m += val;
-                        cols[c] += val;
-                    }
-                }
-            }
-            this.totals.pieces = p;
-            this.totals.meters = m.toFixed(2);
-            this.totals.columns = cols.map(v => v.toFixed(1));
-            
-            // Sync to Livewire with a debounce to avoid lag during typing
-            clearTimeout(this.timeout);
-            this.timeout = setTimeout(() => {
-                this.$wire.set('grid', this.grid);
-                this.$wire.calculateTotals();
-            }, 1500);
-        }
-     }"
-     x-init="calculate()">
-    {{-- Absolute Centering & Professional Grid Styles --}}
+<div>
     <style>
-        /* Modern aesthetic fixes */
+        .grid-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.6rem 0.25rem;
+            color: #1e293b;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         .grid-input:focus {
-            background-color: #f0f9ff !important;
-            box-shadow: inset 0 0 0 2px #3b82f6;
+            outline: none;
+            background-color: #f0f9ff;
+            box-shadow: inset 0 0 0 2px #3b82f6 !important;
+            border-radius: 4px;
             z-index: 10;
         }
-        /* Remove number spinners for perfect centering */
+
+        .grid-input::placeholder {
+            color: #cbd5e1;
+            font-weight: 400;
+        }
+
+        /* Hide number spin buttons */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -44,84 +33,103 @@
         }
         input[type=number] {
             -moz-appearance: textfield;
-            text-align: center !important;
         }
-        .header-gradient {
-            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+
+        .challan-table {
+            border-spacing: 0;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
         }
-        .row-hover:hover {
-            background-color: #f9fafb !important;
+
+        .challan-table th, .challan-table td {
+            border: 1px solid #e2e8f0;
+        }
+
+        .row-index {
+            background-color: #f8fafc;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            font-weight: 800;
+            width: 32px;
+            text-align: center;
+            border-right: 2px solid #e2e8f0 !important;
+        }
+
+        tr:hover td:not(.row-index) {
+            background-color: #fdfdfd;
+        }
+
+        @media (max-width: 640px) {
+            .grid-input {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.1rem;
+            }
+            .row-index {
+                width: 24px;
+            }
         }
     </style>
 
-    <div class="relative overflow-hidden">
-        {{-- Restored User's Preferred Container Classes --}}
-        <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm bg-white">
-            <table class="w-full border-collapse" style="table-layout: fixed; min-width: 320px;">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden" 
+         x-data="{ 
+            grid: @entangle('grid'),
+            init() {
+                // Initial calculation if needed
+            }
+         }">
+        
+        <div class="overflow-x-auto overflow-y-hidden">
+            <table class="challan-table">
                 <thead>
-                    <tr class="header-gradient border-b border-gray-200">
-                        <th class="w-[30px] sm:w-[50px] py-4 text-center text-[10px] font-bold text-slate-400 uppercase tracking-tight">
-                            #
-                        </th>
-                        @for ($c = 1; $c <= 6; $c++)
-                            <th class="py-4 text-center text-[10px] sm:text-[11px] font-black text-slate-600 uppercase tracking-tighter border-l border-gray-100">
-                                <span>{{ $c }}</span>
-                            </th>
+                    <tr class="bg-slate-50">
+                        <th class="row-index py-2">#</th>
+                        @for($c = 1; $c <= 6; $c++)
+                            <th class="py-2 text-xs font-bold text-slate-500 uppercase tracking-wider">{{ $c }}</th>
                         @endfor
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
-                    @for ($r = 1; $r <= 12; $r++)
-                        <tr class="row-hover transition-colors">
-                            <td class="py-3 text-center text-[10px] sm:text-xs font-bold text-slate-400 bg-slate-50/50">
-                                {{ $r }}
-                            </td>
-                            @for ($c = 1; $c <= 6; $c++)
-                                <td class="p-0 border-l border-gray-100 align-middle">
-                                    <input type="number"
-                                           step="0.01"
+                <tbody>
+                    @foreach(range(1, 12) as $r)
+                        <tr>
+                            <td class="row-index">{{ $r }}</td>
+                            @foreach(range(1, 6) as $c)
+                                <td class="p-0">
+                                    <input type="number" 
+                                           step="0.01" 
                                            x-model="grid[{{ $r }}][{{ $c }}]"
-                                           @input="calculate()"
-                                           class="grid-input w-full border-0 bg-transparent py-4 text-center text-[12px] sm:text-sm font-bold text-slate-800 focus:ring-0 focus:outline-none placeholder-slate-200"
-                                           placeholder="0">
+                                           @input.debounce.500ms="$wire.calculateTotals()"
+                                           class="grid-input"
+                                           placeholder="-">
                                 </td>
-                            @endfor
+                            @endforeach
                         </tr>
-                    @endfor
+                    @endforeach
                 </tbody>
-                <tfoot>
-                    <tr class="bg-slate-50 border-t-2 border-slate-200">
-                        <td class="py-4 text-center text-xs font-black text-slate-500">
-                            Σ
-                        </td>
-                        @for ($c = 1; $c <= 6; $c++)
-                            <td class="py-4 text-center border-l border-gray-200">
-                                <span class="text-[11px] sm:text-xs font-black text-blue-700 block text-center" 
-                                      x-text="totals.columns[{{ $c }}]">
-                                </span>
+                <tfoot class="bg-blue-50/50">
+                    <tr class="font-bold text-blue-700">
+                        <td class="row-index">Σ</td>
+                        @foreach(range(1, 6) as $c)
+                            <td class="text-center py-2 text-xs">
+                                <span x-text="($wire.column_totals[{{ $c }}] || 0).toFixed(1)"></span>
                             </td>
-                        @endfor
+                        @endforeach
                     </tr>
                 </tfoot>
             </table>
         </div>
-    </div>
 
-    {{-- Premium Minimalist Summary Row --}}
-    <div class="flex flex-row w-full bg-white border border-gray-200 rounded-xl overflow-hidden divide-x divide-gray-100 shadow-sm">
-        <div class="flex-1 py-4 flex flex-col items-center justify-center bg-gradient-to-br from-white to-slate-50">
-            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Total Pieces</span>
-            <div class="flex items-center space-x-2 mt-1">
-                <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
-                <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight" x-text="totals.pieces"></h3>
+        <!-- Summary Footer -->
+        <div class="grid grid-cols-2 divide-x divide-gray-200 bg-slate-50 border-t border-gray-200">
+            <div class="p-4 text-center">
+                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Total Pieces</p>
+                <p class="text-2xl font-black text-slate-800" x-text="$wire.total_pieces">0</p>
             </div>
-        </div>
-        
-        <div class="flex-1 py-4 flex flex-col items-center justify-center bg-gradient-to-br from-white to-slate-50">
-            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Total Metres</span>
-            <div class="flex items-center space-x-2 mt-1">
-                <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight" x-text="totals.meters"></h3>
+            <div class="p-4 text-center">
+                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Total Metres</p>
+                <p class="text-2xl font-black text-blue-600">
+                    <span x-text="($wire.total_meters || 0).toFixed(1)">0.0</span>
+                </p>
             </div>
         </div>
     </div>

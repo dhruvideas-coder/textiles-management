@@ -58,6 +58,7 @@ class UserForm
                     ->default(fn () => Filament::auth()->user()?->role === 'owner' ? Filament::auth()->id() : null),
                 TextInput::make('password')
                     ->password()
+                    ->revealable()
                     ->required(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord)
                     ->dehydrated(fn ($state) => filled($state))
                     ->default('password')
