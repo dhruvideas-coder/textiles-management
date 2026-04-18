@@ -21,7 +21,6 @@ use App\Filament\Widgets\StatsOverview;
 use App\Filament\Widgets\DailySalesChart;
 use App\Filament\Widgets\TopProductsChart;
 use App\Filament\Widgets\MonthlyRevenueChart;
-use App\Filament\Widgets\ChallanStatusChart;
 use App\Filament\Widgets\TopCustomersChart;
 
 class AdminPanelProvider extends PanelProvider
@@ -53,7 +52,6 @@ class AdminPanelProvider extends PanelProvider
                 StatsOverview::class,
                 DailySalesChart::class,
                 MonthlyRevenueChart::class,
-                ChallanStatusChart::class,
                 TopCustomersChart::class,
                 TopProductsChart::class,
             ])
