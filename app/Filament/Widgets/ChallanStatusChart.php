@@ -14,7 +14,7 @@ class ChallanStatusChart extends ChartWidget
 
     public static function canView(): bool
     {
-        return auth()->check() && auth()->user()->role !== 'staff';
+        return false;
     }
 
     protected function getData(): array
