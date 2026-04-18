@@ -14,7 +14,7 @@ class TopCustomersChart extends ChartWidget
 
     public static function canView(): bool
     {
-        return auth()->check() && auth()->user()->role !== 'staff';
+        return auth()->check() && auth()->user()->role === 'admin';
     }
 
     protected function getData(): array

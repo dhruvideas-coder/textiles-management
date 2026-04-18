@@ -112,10 +112,12 @@ class StatsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-receipt-percent')
                 ->color('danger'),
 
-            Stat::make('Total Customers', $totalCustomers)
-                ->description($monthlyChallans . ' challans this month')
-                ->descriptionIcon('heroicon-m-user-group')
-                ->color('primary'),
+            ...(auth()->user()->role === 'admin' ? [
+                Stat::make('Total Customers', $totalCustomers)
+                    ->description($monthlyChallans . ' challans this month')
+                    ->descriptionIcon('heroicon-m-user-group')
+                    ->color('primary'),
+            ] : []),
         ];
     }
 }
