@@ -8,40 +8,65 @@ use Carbon\Carbon;
 
 class DailySalesChart extends ChartWidget
 {
-    protected ?string $heading = 'Daily Sales (Last 7 Days)';
+    protected ?string $heading = 'Daily Revenue & GST Trend';
+    protected static ?int $sort = 2;
     protected int|string|array $columnSpan = 'full';
+    public ?string $filter = '14';
 
     public static function canView(): bool
     {
         return auth()->check() && auth()->user()->role !== 'staff';
     }
 
+    protected function getFilters(): ?array
+    {
+        return [
+            '7'  => 'Last 7 Days',
+            '14' => 'Last 14 Days',
+            '30' => 'Last 30 Days',
+        ];
+    }
+
     protected function getData(): array
     {
-        $startDate = Carbon::today()->subDays(6);
-        $endDate = Carbon::today();
+        $days = (int) ($this->filter ?? 14);
+        $labels = [];
+        $salesData = [];
+        $gstData = [];
 
-        $sales = Bill::whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()])
-            ->selectRaw('DATE(created_at) as date, SUM(amount) as total')
-            ->groupBy('date')
-            ->pluck('total', 'date')
-            ->toArray();
-
-        for ($i = 6; $i >= 0; $i--) {
+        for ($i = $days - 1; $i >= 0; $i--) {
             $date = Carbon::today()->subDays($i);
-            $labels[] = $date->format('d M');
             $dateString = $date->toDateString();
-            $data[] = $sales[$dateString] ?? 0;
+            $labels[] = $date->format('d M');
+            $salesData[] = round((float) Bill::whereDate('created_at', $dateString)->sum('final_total'), 2);
+            $gstData[] = round((float) (Bill::whereDate('created_at', $dateString)
+                ->selectRaw('SUM(cgst_amount) + SUM(sgst_amount) as total_gst')
+                ->value('total_gst') ?? 0), 2);
         }
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Sales (₹)',
-                    'data' => $data,
+                    'label' => 'Revenue (₹)',
+                    'data' => $salesData,
                     'borderColor' => '#3b82f6',
-                    'backgroundColor' => 'rgba(59, 130, 246, 0.2)',
+                    'backgroundColor' => 'rgba(59, 130, 246, 0.12)',
                     'fill' => true,
+                    'tension' => 0.4,
+                    'pointBackgroundColor' => '#3b82f6',
+                    'pointRadius' => 4,
+                    'pointHoverRadius' => 6,
+                ],
+                [
+                    'label' => 'GST (₹)',
+                    'data' => $gstData,
+                    'borderColor' => '#ef4444',
+                    'backgroundColor' => 'rgba(239, 68, 68, 0.08)',
+                    'fill' => true,
+                    'tension' => 0.4,
+                    'pointBackgroundColor' => '#ef4444',
+                    'pointRadius' => 4,
+                    'pointHoverRadius' => 6,
                 ],
             ],
             'labels' => $labels,

@@ -11,7 +11,6 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Tables\Table;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -21,6 +20,9 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Widgets\StatsOverview;
 use App\Filament\Widgets\DailySalesChart;
 use App\Filament\Widgets\TopProductsChart;
+use App\Filament\Widgets\MonthlyRevenueChart;
+use App\Filament\Widgets\ChallanStatusChart;
+use App\Filament\Widgets\TopCustomersChart;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -48,9 +50,11 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                AccountWidget::class,
                 StatsOverview::class,
                 DailySalesChart::class,
+                MonthlyRevenueChart::class,
+                ChallanStatusChart::class,
+                TopCustomersChart::class,
                 TopProductsChart::class,
             ])
             ->navigationGroups([
