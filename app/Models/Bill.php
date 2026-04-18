@@ -26,7 +26,7 @@ class Bill extends Model
                 $ownerId = auth()->user()->role === 'owner'
                     ? auth()->id()
                     : auth()->user()->owner_id;
-                $builder->where('owner_id', $ownerId);
+                $builder->where('bills.owner_id', $ownerId);
             }
         });
 
