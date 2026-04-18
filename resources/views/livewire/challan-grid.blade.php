@@ -60,6 +60,83 @@
             background-color: #fdfdfd;
         }
 
+        /* tfoot column totals */
+        .col-total-cell {
+            text-align: center;
+            padding: 8px 4px;
+            background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%);
+        }
+        .col-total-val {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 800;
+            /* color: #1d4ed8; */
+            letter-spacing: 0.01em;
+            /* background: #dbeafe; */
+            border-radius: 6px;
+            padding: 2px 6px;
+            min-width: 48px;
+        }
+
+        /* summary footer */
+        .challan-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        .summary-card {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 14px 12px;
+        }
+        .summary-card-pieces {
+            border-right: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        .summary-card-metres {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        }
+        .summary-accent {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+        }
+        .summary-label-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .summary-icon {
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .summary-label {
+            font-size: 8.5px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+        .summary-value {
+            font-size: 1.6rem;
+            font-weight: 900;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+        .summary-unit {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 999px;
+            padding: 2px 8px;
+        }
+
         @media (max-width: 640px) {
             .grid-input {
                 font-size: 0.75rem;
@@ -67,6 +144,13 @@
             }
             .row-index {
                 width: 24px;
+            }
+            .summary-value {
+                font-size: 1.25rem;
+            }
+            .col-total-val {
+                font-size: 0.65rem;
+                min-width: 36px;
             }
         }
     </style>
@@ -106,12 +190,12 @@
                         </tr>
                     @endforeach
                 </tbody>
-                <tfoot class="bg-blue-50/50">
-                    <tr class="font-bold text-blue-700">
-                        <td class="row-index">Σ</td>
+                <tfoot>
+                    <tr>
+                        <td class="row-index" style="background:linear-gradient(135deg,#eff6ff,#e0f2fe); color:#1d4ed8; font-size:0.75rem; font-weight:900;">Σ</td>
                         @foreach(range(1, 6) as $c)
-                            <td class="text-center py-2 text-xs">
-                                <span x-text="($wire.column_totals[{{ $c }}] || 0).toFixed(1)"></span>
+                            <td class="col-total-cell">
+                                <span class="col-total-val" x-text="($wire.column_totals[{{ $c }}] || 0).toFixed(1)">0.0</span>
                             </td>
                         @endforeach
                     </tr>
@@ -119,18 +203,44 @@
             </table>
         </div>
 
+        <!-- Separator -->
+        <div style="height:10px; background:#f1f5f9; border-top:2px solid #e2e8f0; border-bottom:2px solid #e2e8f0;"></div>
+
         <!-- Summary Footer -->
-        <div class="grid grid-cols-2 divide-x divide-gray-200 bg-slate-50 border-t border-gray-200">
-            <div class="p-4 text-center">
-                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Total Pieces</p>
-                <p class="text-2xl font-black text-slate-800" x-text="$wire.total_pieces">0</p>
+        <div class="challan-summary">
+
+            {{-- Total Pieces --}}
+            <div class="summary-card summary-card-pieces">
+                <div class="summary-accent" style="background:linear-gradient(90deg,#94a3b8,#475569,#94a3b8);"></div>
+                <div class="summary-label-row">
+                    <div class="summary-icon" style="background:#e2e8f0;">
+                        <svg width="10" height="10" fill="none" stroke="#475569" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 6h14M5 18h14"/>
+                        </svg>
+                    </div>
+                    <span class="summary-label" style="color:#64748b;">Total Pieces</span>
+                </div>
+                <span class="summary-value" style="color:#1e293b;" x-text="$wire.total_pieces">0</span>
+                <span class="summary-unit" style="color:#94a3b8; background:#e2e8f0;">pcs</span>
             </div>
-            <div class="p-4 text-center">
-                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Total Metres</p>
-                <p class="text-2xl font-black text-blue-600">
+
+            {{-- Total Metres --}}
+            <div class="summary-card summary-card-metres">
+                <div class="summary-accent" style="background:linear-gradient(90deg,#93c5fd,#2563eb,#6366f1);"></div>
+                <div class="summary-label-row">
+                    <div class="summary-icon" style="background:#bfdbfe;">
+                        <svg width="10" height="10" fill="none" stroke="#2563eb" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M3 12h18M3 18h18"/>
+                        </svg>
+                    </div>
+                    <span class="summary-label" style="color:#2563eb;">Total Metres</span>
+                </div>
+                <span class="summary-value" style="color:#1d4ed8;">
                     <span x-text="($wire.total_meters || 0).toFixed(1)">0.0</span>
-                </p>
+                </span>
+                <span class="summary-unit" style="color:#2563eb; background:#bfdbfe;">mtrs</span>
             </div>
+
         </div>
     </div>
 </div>

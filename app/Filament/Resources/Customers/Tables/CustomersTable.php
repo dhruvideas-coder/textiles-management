@@ -18,7 +18,8 @@ class CustomersTable
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('GSTIN')
-                    ->searchable(),
+                    ->searchable()
+                    ->formatStateUsing(fn ($state) => strtoupper($state)),
                 TextColumn::make('mobile_number')
                     ->searchable(),
                 TextColumn::make('created_at')

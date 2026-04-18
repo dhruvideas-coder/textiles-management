@@ -50,6 +50,7 @@ class CustomerForm
                     ->placeholder('24AAAAA0000A1Z5')
                     ->extraInputAttributes([
                         'oninput' => 'this.value=this.value.replace(/[^a-zA-Z0-9]/g,"").toUpperCase()',
+                        'style'   => 'text-transform: uppercase; letter-spacing: 1px;',
                     ]),
 
                 Textarea::make('address')
