@@ -21,6 +21,12 @@ class ChallansTable
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
+                TextColumn::make('businessDetail.business_name')
+                    ->label('Business Profile')
+                    ->searchable()
+                    ->placeholder('—')
+                    ->badge()
+                    ->color('info'),
                 TextColumn::make('customer.name')
                     ->label('Party')
                     ->searchable()
@@ -34,8 +40,6 @@ class ChallansTable
                 TextColumn::make('date')
                     ->date()
                     ->sortable(),
-                TextColumn::make('status')
-                    ->badge(),
                 TextColumn::make('total_pieces')
                     ->label('Pcs')
                     ->numeric()

@@ -46,6 +46,12 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    public function businessDetails()
+    {
+        return $this->hasMany(\App\Models\BusinessDetail::class, 'owner_id');
+    }
+
+
     public function canAccessPanel(Panel $panel): bool
     {
         return in_array($this->role, ['admin', 'owner', 'staff']);

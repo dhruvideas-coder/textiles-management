@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\Challans\Schemas;
 
+use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use App\Models\BusinessDetail;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\User;
@@ -16,26 +18,57 @@ class ChallanForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $isAdmin = auth()->check() && auth()->user()->role === 'admin';
+        $isAdmin = Filament::auth()->user()?->role === 'admin';
 
         $detailFields = [];
 
-        // Admin picks which owner's data to use
         if ($isAdmin) {
             $detailFields[] = Select::make('owner_id')
                 ->label('Owner (Business)')
-                ->options(User::where('role', 'owner')->pluck('name', 'id'))
+                ->options(
+                    User::where('role', 'owner')
+                        ->has('businessDetails')
+                        ->pluck('name', 'id')
+                )
                 ->required()
                 ->searchable()
-                ->reactive()
+                ->live()
                 ->afterStateUpdated(function (callable $set) {
+                    $set('business_detail_id', null);
                     $set('customer_id', null);
                     $set('product_id', null);
-                    
-                    // Logic to refresh challan number would go here, 
-                    // but we can also handle it in the Page class via listeners.
                 })
                 ->columnSpanFull();
+
+            $detailFields[] = Select::make('business_detail_id')
+                ->label('Business Profile')
+                ->options(function (callable $get) {
+                    $ownerId = $get('owner_id');
+                    if (! $ownerId) return [];
+
+                    return BusinessDetail::where('owner_id', $ownerId)
+                        ->pluck('business_name', 'id');
+                })
+                ->placeholder('Select a business profile')
+                ->required()
+                ->searchable()
+                ->hidden(fn ($get) => ! $get('owner_id'))
+                ->columnSpanFull();
+        } else {
+            // Owner / Staff: show their own business profiles
+            $authUser = Filament::auth()->user();
+            $ownerId  = $authUser?->role === 'owner' ? $authUser->id : $authUser?->owner_id;
+            $profiles = BusinessDetail::where('owner_id', $ownerId)->pluck('business_name', 'id');
+
+            if ($profiles->isNotEmpty()) {
+                $detailFields[] = Select::make('business_detail_id')
+                    ->label('Business Profile')
+                    ->options($profiles)
+                    ->default($profiles->keys()->first())
+                    ->required()
+                    ->searchable()
+                    ->columnSpanFull();
+            }
         }
 
         $detailFields = array_merge($detailFields, [
@@ -51,8 +84,8 @@ class ChallanForm
                     $query = Customer::query();
                     if ($isAdmin) {
                         $ownerId = $get('owner_id');
-                        if (!$ownerId) return [];
-                        $query->where(fn($q) => $q->where('owner_id', $ownerId)->orWhereNull('owner_id'));
+                        if (! $ownerId) return [];
+                        $query->where(fn ($q) => $q->where('owner_id', $ownerId)->orWhereNull('owner_id'));
                     }
                     return $query->pluck('name', 'id');
                 })
@@ -65,14 +98,14 @@ class ChallanForm
                     $query = Product::query();
                     if ($isAdmin) {
                         $ownerId = $get('owner_id');
-                        if (!$ownerId) return [];
-                        $query->where(fn($q) => $q->where('owner_id', $ownerId)->orWhereNull('owner_id'));
+                        if (! $ownerId) return [];
+                        $query->where(fn ($q) => $q->where('owner_id', $ownerId)->orWhereNull('owner_id'));
                     }
                     return $query->pluck('name', 'id');
                 })
                 ->required()
                 ->searchable()
-                ->reactive()
+                ->live()
                 ->afterStateUpdated(fn ($state, callable $set) => $set('rate', Product::find($state)?->default_rate ?? 0)),
 
             TextInput::make('broker')
@@ -110,8 +143,8 @@ class ChallanForm
                 ->columnSpanFull()
                 ->columns([
                     'default' => 1,
-                    'sm' => 2,
-                    'lg' => 3,
+                    'sm'      => 2,
+                    'lg'      => 3,
                 ])
                 ->schema($detailFields),
 

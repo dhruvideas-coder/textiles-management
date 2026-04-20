@@ -12,7 +12,7 @@ class PdfController extends Controller
 {
     public function challan($id)
     {
-        $challan = Challan::with(['customer', 'product', 'items', 'owner'])->findOrFail($id);
+        $challan = Challan::with(['customer', 'product', 'items', 'owner', 'businessDetail'])->findOrFail($id);
 
         return Pdf::loadView('pdf.challan', compact('challan'))
             ->setPaper('A4')
@@ -21,7 +21,7 @@ class PdfController extends Controller
 
     public function bill($id)
     {
-        $bill = Bill::with(['challan.customer', 'challan.product', 'owner'])->findOrFail($id);
+        $bill = Bill::with(['challan.customer', 'challan.product', 'challan.businessDetail', 'owner'])->findOrFail($id);
 
         return Pdf::loadView('pdf.bill', compact('bill'))
             ->setPaper('A4')
@@ -30,7 +30,7 @@ class PdfController extends Controller
 
     public function sendChallanWhatsApp($id, WhatsAppService $service)
     {
-        $challan = Challan::with(['customer', 'product', 'items', 'owner'])->findOrFail($id);
+        $challan = Challan::with(['customer', 'product', 'items', 'owner', 'businessDetail'])->findOrFail($id);
 
         $pdfContent = Pdf::loadView('pdf.challan', compact('challan'))
             ->setPaper('A4')

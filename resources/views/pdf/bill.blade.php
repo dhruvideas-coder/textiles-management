@@ -277,30 +277,43 @@
     </style>
 </head>
 <body>
+    @php
+        $owner      = $bill->owner ?? $bill->challan?->owner;
+        $biz        = $bill->challan?->businessDetail ?? $owner?->businessDetails()->first() ?? null;
+
+        $bizName    = $biz?->business_name    ?? $owner?->business_name    ?? 'GURUDEV TEXTILES';
+        $bizAddress = $biz?->business_address ?? $owner?->business_address ?? 'Plot No. 38, Sonal Ind. Estate-3, G.H.B. Road, Behind Chickuwadi, Near New Water Tank, SURAT.';
+        $bizMobile  = $biz?->mobile           ?? $owner?->mobile           ?? '98790 69490';
+        $bizGstin   = $biz?->gstin            ?? $owner?->gstin            ?? '24EZAPP5247K1Z3';
+
+        $nameParts  = explode(' ', trim($bizName), 2);
+        $nameFirst  = $nameParts[0];
+        $nameRest   = $nameParts[1] ?? '';
+    @endphp
     <div class="main-wrapper">
         <div class="header">
             <div class="tax-invoice-tag">TAX INVOICE</div>
-            <div class="mo-number">Mo.: 98790 69490</div>
-            
+            <div class="mo-number">Mo.: {{ $bizMobile }}</div>
+
             <div class="mfg-box">
                 Manufacturer & Dealers in :<br>
                 <span>ART SILK CLOTH</span>
             </div>
-            
+
             <div class="brand-title">
-                <span class="brand-gurudev">GURUDEV</span>
-                <span class="brand-textiles">TEXTILES</span>
+                <span class="brand-gurudev">{{ $nameFirst }}</span>
+                <span class="brand-textiles">{{ $nameRest }}</span>
             </div>
         </div>
-        
+
         <div class="address-bar">
-            Plot No. 38, Sonal Ind. Estate-3, G.H.B. Road, Behind Chickuwadi, Near New Water Tank, SURAT.
+            {{ $bizAddress }}
         </div>
-        
+
         <table class="info-table" style="border-top: none; border-bottom: 2px solid #1e3a8a;">
             <tr>
                 <td style="width: 65%; border-top: none; padding: 6px 10px; background: #f8fafc;">
-                    <span style="color:#64748b;">GSTIN No.:</span> <span style="color:#dc2626; font-family: 'Courier New', monospace; font-size:15px; margin-left: 5px; font-weight: bold;">24EZAPP5247K1Z3</span>
+                    <span style="color:#64748b;">GSTIN No.:</span> <span style="color:#dc2626; font-family: 'Courier New', monospace; font-size:15px; margin-left: 5px; font-weight: bold;">{{ $bizGstin }}</span>
                 </td>
                 <td style="width: 35%; border-top: none; padding: 6px 10px; background: #f8fafc;">
                     <span style="color:#64748b;">HSN Code :</span> 

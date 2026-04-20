@@ -20,6 +20,12 @@ class BillsTable
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
+                TextColumn::make('challan.businessDetail.business_name')
+                    ->label('Business Profile')
+                    ->searchable()
+                    ->placeholder('—')
+                    ->badge()
+                    ->color('info'),
                 TextColumn::make('challan.challan_number')
                     ->label('Challan No.')
                     ->searchable()

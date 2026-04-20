@@ -9,6 +9,7 @@ class Challan extends Model
 {
     protected $fillable = [
         'owner_id',
+        'business_detail_id',
         'challan_number',
         'customer_id',
         'product_id',
@@ -46,6 +47,11 @@ class Challan extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function businessDetail()
+    {
+        return $this->belongsTo(BusinessDetail::class, 'business_detail_id');
     }
 
     public function customer()
