@@ -7,10 +7,11 @@
         $owner        = $challan->owner;
         $biz          = $challan->businessDetail ?? $owner?->businessDetails()->first() ?? null;
 
-        $bizName      = $biz?->business_name    ?? $owner?->business_name    ?? 'GURUDEV TEXTILES';
-        $bizAddress   = $biz?->business_address ?? $owner?->business_address ?? 'Plot No. 38, Sonal Ind. Estate-3, G.H.B. Road, Behind Chickuwadi, Near New Water Tank, SURAT.';
-        $bizMobile    = $biz?->mobile           ?? $owner?->mobile           ?? '98790 69490';
-        $bizGstin     = $biz?->gstin            ?? $owner?->gstin            ?? '24EZAPP5247K1Z3';
+        $bizName        = $biz?->business_name          ?? $owner?->business_name    ?? 'GURUDEV TEXTILES';
+        $bizAddress     = $biz?->business_address       ?? $owner?->business_address ?? 'Plot No. 38, Sonal Ind. Estate-3, G.H.B. Road, Behind Chickuwadi, Near New Water Tank, SURAT.';
+        $bizMobile      = $biz?->mobile                 ?? $owner?->mobile           ?? '98790 69490';
+        $bizGstin       = $biz?->gstin                  ?? $owner?->gstin            ?? '24EZAPP5247K1Z3';
+        $bizMfgDealers  = $biz?->manufacturers_dealers_in ?? 'ART SILK CLOTH';
 
         // Split business name into first word + rest for two-tone display
         $nameParts    = explode(' ', trim($bizName), 2);
@@ -301,7 +302,7 @@
 
         <div class="mfg-box">
             Manufacturer &amp; Dealers in :<br>
-            <span>ART SILK CLOTH</span>
+            <span>{{ $bizMfgDealers }}</span>
         </div>
 
         <div class="brand-title">

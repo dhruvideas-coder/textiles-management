@@ -281,10 +281,11 @@
         $owner      = $bill->owner ?? $bill->challan?->owner;
         $biz        = $bill->challan?->businessDetail ?? $owner?->businessDetails()->first() ?? null;
 
-        $bizName    = $biz?->business_name    ?? $owner?->business_name    ?? 'GURUDEV TEXTILES';
-        $bizAddress = $biz?->business_address ?? $owner?->business_address ?? 'Plot No. 38, Sonal Ind. Estate-3, G.H.B. Road, Behind Chickuwadi, Near New Water Tank, SURAT.';
-        $bizMobile  = $biz?->mobile           ?? $owner?->mobile           ?? '98790 69490';
-        $bizGstin   = $biz?->gstin            ?? $owner?->gstin            ?? '24EZAPP5247K1Z3';
+        $bizName       = $biz?->business_name          ?? $owner?->business_name    ?? 'GURUDEV TEXTILES';
+        $bizAddress    = $biz?->business_address       ?? $owner?->business_address ?? 'Plot No. 38, Sonal Ind. Estate-3, G.H.B. Road, Behind Chickuwadi, Near New Water Tank, SURAT.';
+        $bizMobile     = $biz?->mobile                 ?? $owner?->mobile           ?? '98790 69490';
+        $bizGstin      = $biz?->gstin                  ?? $owner?->gstin            ?? '24EZAPP5247K1Z3';
+        $bizMfgDealers = $biz?->manufacturers_dealers_in ?? 'ART SILK CLOTH';
 
         $nameParts  = explode(' ', trim($bizName), 2);
         $nameFirst  = $nameParts[0];
@@ -297,7 +298,7 @@
 
             <div class="mfg-box">
                 Manufacturer & Dealers in :<br>
-                <span>ART SILK CLOTH</span>
+                <span>{{ $bizMfgDealers }}</span>
             </div>
 
             <div class="brand-title">
@@ -419,12 +420,12 @@
                             <td>Add : SGST &nbsp;&nbsp;&nbsp; <span style="color: #64748b;">2.5%</span></td>
                             <td class="val-col">{{ number_format($bill->sgst_amount, 2) }}</td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <td style="height: 40px; vertical-align: top;">Add : IGST &nbsp;&nbsp;&nbsp; <span style="color: #64748b;">0%</span></td>
                             <td class="val-col" style="height: 40px; vertical-align: top;">-</td>
-                        </tr>
+                        </tr> --}}
                         <tr class="total-row">
-                            <td style="font-size: 13px; text-transform: uppercase;">Total Amount After Tax</td>
+                            <td style="font-size: 13px; text-transform: uppercase;">Total Amount</td>
                             <td class="val-col" style="font-weight: bold; color: #1e3a8a;">Rs. {{ number_format($bill->final_total, 2) }}</td>
                         </tr>
                     </table>
@@ -440,7 +441,7 @@
                 </td>
                 <td class="auth-sign">
                     <span class="certify-text">Certified that the particulars given above are true & correct.</span>
-                    <div class="auth-sign-title">FOR, GURUDEV TEXTILES</div>
+                    <div class="auth-sign-title">FOR, {{ $bizName }}</div>
                     <div style="margin-top: 25px; color: #1e3a8a; font-weight: bold;">Authorised Signatory</div>
                 </td>
             </tr>

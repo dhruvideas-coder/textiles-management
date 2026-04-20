@@ -12,6 +12,7 @@ class BusinessDetail extends Model
         'mobile',
         'business_address',
         'gstin',
+        'manufacturers_dealers_in',
     ];
 
     public function owner()

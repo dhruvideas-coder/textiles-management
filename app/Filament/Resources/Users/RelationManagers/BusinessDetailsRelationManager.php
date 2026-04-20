@@ -58,6 +58,11 @@ class BusinessDetailsRelationManager extends RelationManager
                     ->hint('15 characters')
                     ->extraInputAttributes(['style' => 'text-transform: uppercase; letter-spacing: 1px;']),
 
+                TextInput::make('manufacturers_dealers_in')
+                    ->label('Manufacturer & Dealers in')
+                    ->placeholder('e.g. ART SILK CLOTH')
+                    ->maxLength(255),
+
                 Textarea::make('business_address')
                     ->label('Business Address')
                     ->rows(2)
