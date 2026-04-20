@@ -58,6 +58,7 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Business',
                 'Documents',
+                'Reports',
                 'Administration',
             ])
             ->middleware([

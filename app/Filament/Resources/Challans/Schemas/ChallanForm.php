@@ -115,16 +115,6 @@ class ChallanForm
                 ->default(now())
                 ->required(),
 
-            Select::make('status')
-                ->options([
-                    'At Mill'       => 'At Mill',
-                    'Process House' => 'Process House',
-                    'In Stock'      => 'In Stock',
-                    'Billed'        => 'Billed',
-                ])
-                ->default('At Mill')
-                ->required(),
-
             TextInput::make('total_pieces')
                 ->required()
                 ->numeric()
