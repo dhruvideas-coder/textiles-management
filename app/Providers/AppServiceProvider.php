@@ -16,6 +16,12 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         
+        \Illuminate\Database\Eloquent\Model::preventLazyLoading(!app()->isProduction());
+        
+        if (app()->isProduction()) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         \Filament\Support\Facades\FilamentView::registerRenderHook(
             \Filament\View\PanelsRenderHook::BODY_END,
             fn (): string => view('filament.hooks.auto-logout')->render()

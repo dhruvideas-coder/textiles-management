@@ -74,14 +74,16 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->spa();
     }
 
     public function boot(): void
     {
         Table::configureUsing(function (Table $table): void {
             $table
-                ->extremePaginationLinks();
+                ->extremePaginationLinks()
+                ->deferLoading();
         });
     }
 }

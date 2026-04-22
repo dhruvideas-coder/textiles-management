@@ -15,7 +15,8 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            /* font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; */
+            font-family: 'DejaVu Sans', sans-serif;
             font-size: 9.5px;
             color: #0f172a;
             background: #fff;
